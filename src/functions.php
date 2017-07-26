@@ -242,7 +242,7 @@ if (function_exists('register_sidebar'))
 function my_remove_recent_comments_style()
 {
     global $wp_widget_factory;
-    
+
     if (isset($wp_widget_factory->widgets['WP_Widget_Recent_Comments'])) {
         remove_action('wp_head', array(
             $wp_widget_factory->widgets['WP_Widget_Recent_Comments'],
@@ -429,6 +429,8 @@ remove_filter('the_excerpt', 'wpautop'); // Remove <p> tags from Excerpt altoget
 // Shortcodes
 add_shortcode('html5_shortcode_demo', 'html5_shortcode_demo'); // You can place [html5_shortcode_demo] in Pages, Posts now.
 add_shortcode('html5_shortcode_demo_2', 'html5_shortcode_demo_2'); // Place [html5_shortcode_demo_2] in Pages, Posts now.
+add_shortcode('rountree_discount_code', 'rountree_discount_code');
+add_shortcode('rountree_button', 'rountree_button');
 
 // Shortcodes above would be nested like this -
 // [html5_shortcode_demo] [html5_shortcode_demo_2] Here's the page title! [/html5_shortcode_demo_2] [/html5_shortcode_demo]
@@ -489,4 +491,26 @@ function html5_shortcode_demo($atts, $content = null)
 function html5_shortcode_demo_2($atts, $content = null) // Demo Heading H2 shortcode, allows for nesting within above element. Fully expandable.
 {
     return '<h2>' . $content . '</h2>';
+}
+
+// Render an inline message to display a discount
+function rountree_discount_code($atts, $content = 'Ask how you can save up to 15% on classes.', $tag)
+{
+
+	$a = shortcode_atts( array(
+        'headline' => 'Get a discount!'
+    ), $atts );
+
+	return '<p class="message warning"><em>' . $a['headline'] . '</em>' . $content . '</p>';
+}
+
+// Render a link as a button
+function rountree_button($atts, $content = 'Click here!', $tag)
+{
+
+	$a = shortcode_atts( array(
+        'url' => '#'
+    ), $atts );
+
+	return '<a class="button default" href="' . $a['url'] . '" title="' . $content . '">' . $content . '</a>';
 }
