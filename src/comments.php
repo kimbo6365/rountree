@@ -19,6 +19,6 @@
 
 <?php endif; ?>
 
-<?php comment_form(); ?>
+<?php comment_form(array( 'class_submit' => 'btn btn-primary' )); ?>
 
 </div>

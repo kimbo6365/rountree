@@ -2,11 +2,14 @@
  * partials/wrapper
  * ---
  */
-
+body {
+	background: darken($brand-primary, 20%);
+}
 
 .wrapper {
   max-width: $wrapper-width;
-  padding: 0 $margin-horizontal-large;
+  padding: 0;
   margin: 0 auto;
   position: relative;
+  background: #fff;
 }

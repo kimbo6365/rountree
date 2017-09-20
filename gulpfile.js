@@ -13,6 +13,8 @@ var gulp = require( "gulp" ),
 		"src/js/lib/conditionizr-4.3.0.min.js",
 		/** jQuery */
 		"src/bower_components/jquery/dist/jquery.js",
+		/** Bootstrap */
+		"src/js/lib/bootstrap.js",
 		/** Page scripts */
 		"src/js/scripts.js"
 	],

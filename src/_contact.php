@@ -2,25 +2,19 @@
 
 	<main role="main" aria-label="Content">
 		<!-- section -->
-		<section>
-
-			<h1><?php the_title(); ?></h1>
-
+		<section class="container-fluid contact-page">
+			<div class="row">
 		<?php if (have_posts()): while (have_posts()) : the_post(); ?>
-
-			<!-- article -->
-			<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+		<h1 class="col-sm-10 col-sm-offset-1 page-title"><?php the_title(); ?></h1>
+		<!-- article -->
+			<article id="post-<?php the_ID(); ?>" class="col-sm-10 col-sm-offset-1" <?php post_class(); ?>>
 
 				<?php the_content(); ?>
-
-				<?php comments_template( '', true ); // Remove if you don't want comments ?>
-
-				<br class="clear">
-
-				<?php edit_post_link(); ?>
+				<?php echo do_shortcode("[ninja_form id=1]"); ?>
 
 			</article>
 			<!-- /article -->
+		</div>
 
 		<?php endwhile; ?>
 
@@ -39,7 +33,5 @@
 		</section>
 		<!-- /section -->
 	</main>
-
-<?php get_sidebar(); ?>
 
 <?php get_footer(); ?>

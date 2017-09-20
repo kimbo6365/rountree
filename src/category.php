@@ -2,7 +2,7 @@
 
 	<main role="main" aria-label="Content">
 		<!-- section -->
-		<section>
+		<section class="container-fluid">
 
 			<h1><?php _e( 'Category: ', 'html5blank' ); single_cat_title(); ?></h1>
 

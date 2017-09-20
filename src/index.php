@@ -2,9 +2,9 @@
 
 	<main role="main" aria-label="Content">
 		<!-- section -->
-		<section>
+		<section class="container-fluid">
 
-			<h1><?php _e( 'Latest Posts', 'html5blank' ); ?></h1>
+			<h1 class="page-title col-sm-10 col-sm-offset-1"><?php _e( 'Latest Posts', 'html5blank' ); ?></h1>
 
 			<?php get_template_part('loop'); ?>
 
@@ -13,7 +13,5 @@
 		</section>
 		<!-- /section -->
 	</main>
-
-<?php get_sidebar(); ?>
 
 <?php get_footer(); ?>

@@ -12,6 +12,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="description" content="<?php bloginfo('description'); ?>">
+		<link href="https://fonts.googleapis.com/css?family=Cabin|Cairo|Montserrat|Muli|Noto+Sans|Nunito|Open+Sans|Oxygen|Poppins|Poppins:700|Raleway|Roboto|Source+Sans+Pro|Ubuntu|Varela+Round|Zilla+Slab|Spirax|Lato|Lato:700" rel="stylesheet">
 
 		<?php wp_head(); ?>
 		<script>
@@ -24,23 +25,45 @@
         </script>
 
 	</head>
-	<body <?php body_class(); ?>>
+	<body class="rountree" <?php body_class(); ?>>
 
 		<!-- wrapper -->
 		<div class="wrapper">
 
 			<!-- header -->
 			<header class="header clear" role="banner">
-
-					<!-- logo -->
-					<div class="logo">
-						<a href="<?php echo home_url(); ?>">
-							<!-- svg logo - toddmotto.com/mastering-svg-use-for-a-retina-web-fallbacks-with-png-script -->
-							<img src="<?php echo get_template_directory_uri(); ?>/img/logo.svg" alt="Logo" class="logo-img">
-						</a>
+					<?php global $post; ?>
+					<?php 
+						if (is_home()) {
+							// Hard-code the ID of the blog page
+							$image = get_the_post_thumbnail_url(15, 'large');
+						} else {
+							$image = get_the_post_thumbnail_url($post->ID, 'large');							
+						}
+						$categories = get_the_category($post->ID);
+						foreach($categories as $cat) {
+							if (is_single() && $cat->cat_ID !== 2 && $cat->cat_ID !== 6) {
+								$image = get_the_post_thumbnail_url(15, 'large');
+							}
+						}
+					?>
+					<div class="banner-image-container" style="background-image: url('<?php echo $image; ?>'); <?php if ($post->ID === 6) echo 'background-position-x: left;' ?>">
+						<div class="page-title-wrapper">
+							<div class="title-text">
+								<h1>
+									<?php
+										if (is_front_page()) {
+											echo 'Amanda Rountree';
+										} elseif (is_home()) {
+											echo 'Amanda\'s Blog';
+										} else {
+											echo get_the_title($post->ID);
+										}
+									?></h1>
+								<h2><?php the_field('subtitle'); ?></h2>
+							</div>
+						</div>
 					</div>
-					<!-- /logo -->
-
 					<!-- nav -->
 					<nav class="nav" role="navigation">
 						<?php html5blank_nav(); ?>

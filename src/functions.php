@@ -27,10 +27,10 @@ if (function_exists('add_theme_support'))
 
     // Add Thumbnail Theme Support
     add_theme_support('post-thumbnails');
-    add_image_size('large', 700, '', true); // Large Thumbnail
-    add_image_size('medium', 250, '', true); // Medium Thumbnail
-    add_image_size('small', 120, '', true); // Small Thumbnail
-    add_image_size('custom-size', 700, 200, true); // Custom Thumbnail Size call using the_post_thumbnail('custom-size');
+    add_image_size('large', 1280, 400, true); // Large Thumbnail
+    add_image_size('medium', 400, 400, true); // Medium Thumbnail
+    add_image_size('small', 250, 250, true); // Small Thumbnail
+    add_image_size('promo_banner', 1280, 400, true); // Small Thumbnail
 
     // Add Support for Custom Backgrounds - Uncomment below if you're going to use
     /*add_theme_support('custom-background', array(
@@ -73,9 +73,9 @@ function html5blank_nav()
         'theme_location'  => 'header-menu',
         'menu'            => '',
         'container'       => 'div',
-        'container_class' => 'menu-{menu slug}-container',
+        'container_class' => '',
         'container_id'    => '',
-        'menu_class'      => 'menu',
+        'menu_class'      => 'nav',
         'menu_id'         => '',
         'echo'            => true,
         'fallback_cb'     => 'wp_page_menu',
@@ -105,6 +105,9 @@ function html5blank_header_scripts()
             // Modernizr
             wp_register_script('modernizr', get_template_directory_uri() . '/bower_components/modernizr/modernizr.js', array(), '2.8.3');
 
+            // Modernizr
+            wp_register_script('bootstrap', get_template_directory_uri() . '/js/lib/bootstrap.js', array(), '3.3.7');
+
             // Custom scripts
             wp_register_script(
                 'html5blankscripts',
@@ -112,7 +115,8 @@ function html5blank_header_scripts()
                 array(
                     'conditionizr',
                     'modernizr',
-                    'jquery'),
+                    'jquery',
+				'bootstrap'),
                 '1.0.0');
 
             // Enqueue Scripts
@@ -163,8 +167,6 @@ function register_html5_menu()
 {
     register_nav_menus(array( // Using array to specify more menus if needed
         'header-menu' => __('Header Menu', 'html5blank'), // Main Navigation
-        'sidebar-menu' => __('Sidebar Menu', 'html5blank'), // Sidebar Navigation
-        'extra-menu' => __('Extra Menu', 'html5blank') // Extra Navigation if needed (duplicate as many as you need!)
     ));
 }
 
@@ -260,7 +262,8 @@ function html5wp_pagination()
         'base' => str_replace($big, '%#%', get_pagenum_link($big)),
         'format' => '?paged=%#%',
         'current' => max(1, get_query_var('paged')),
-        'total' => $wp_query->max_num_pages
+        'total' => $wp_query->max_num_pages,
+        'type' => 'list'
     ));
 }
 
@@ -297,7 +300,7 @@ function html5wp_excerpt($length_callback = '', $more_callback = '')
 function html5_blank_view_article($more)
 {
     global $post;
-    return '... <a class="view-article" href="' . get_permalink($post->ID) . '">' . __('View Article', 'html5blank') . '</a>';
+    return '&#8230; <div class="read-more-wrapper"><a class="view-article btn btn-default" href="' . get_permalink($post->ID) . '">' . __('Read More &raquo;', 'html5blank') . '</a></div>';
 }
 
 // Remove Admin bar
@@ -391,7 +394,7 @@ add_action('wp_print_scripts', 'html5blank_conditional_scripts'); // Add Conditi
 add_action('get_header', 'enable_threaded_comments'); // Enable Threaded Comments
 add_action('wp_enqueue_scripts', 'html5blank_styles'); // Add Theme Stylesheet
 add_action('init', 'register_html5_menu'); // Add HTML5 Blank Menu
-add_action('init', 'create_post_type_html5'); // Add our HTML5 Blank Custom Post Type
+add_action('init', 'create_post_type_testimonial'); // Add our HTML5 Blank Custom Post Type
 add_action('widgets_init', 'my_remove_recent_comments_style'); // Remove inline Recent Comment Styles from wp_head()
 add_action('init', 'html5wp_pagination'); // Add our HTML5 Pagination
 
@@ -410,7 +413,7 @@ add_filter('body_class', 'add_slug_to_body_class'); // Add slug to body class (S
 add_filter('widget_text', 'do_shortcode'); // Allow shortcodes in Dynamic Sidebar
 add_filter('widget_text', 'shortcode_unautop'); // Remove <p> tags in Dynamic Sidebars (better!)
 add_filter('wp_nav_menu_args', 'my_wp_nav_menu_args'); // Remove surrounding <div> from WP Navigation
-// add_filter('nav_menu_css_class', 'my_css_attributes_filter', 100, 1); // Remove Navigation <li> injected classes (Commented out by default)
+// add_filter('nav_menu_css_class', 'my_css_attributes_filter', 100, 1); // Remove Navigation <li> injected classes(Commented out 
 // add_filter('nav_menu_item_id', 'my_css_attributes_filter', 100, 1); // Remove Navigation <li> injected ID (Commented out by default)
 // add_filter('page_css_class', 'my_css_attributes_filter', 100, 1); // Remove Navigation <li> Page ID's (Commented out by default)
 add_filter('the_category', 'remove_category_rel_from_category_list'); // Remove invalid rel attribute
@@ -422,43 +425,91 @@ add_filter('style_loader_tag', 'html5_style_remove'); // Remove 'text/css' from 
 add_filter('post_thumbnail_html', 'remove_thumbnail_dimensions', 10); // Remove width and height dynamic attributes to thumbnails
 add_filter('post_thumbnail_html', 'remove_width_attribute', 10 ); // Remove width and height dynamic attributes to post images
 add_filter('image_send_to_editor', 'remove_width_attribute', 10 ); // Remove width and height dynamic attributes to post images
+add_filter( 'postmeta_form_limit' , 'customfield_limit_increase' );
+function customfield_limit_increase( $limit ) {
+    $limit = 150;
+    return $limit;
+}
 
 // Remove Filters
 remove_filter('the_excerpt', 'wpautop'); // Remove <p> tags from Excerpt altogether
 
 // Shortcodes
-add_shortcode('html5_shortcode_demo', 'html5_shortcode_demo'); // You can place [html5_shortcode_demo] in Pages, Posts now.
-add_shortcode('html5_shortcode_demo_2', 'html5_shortcode_demo_2'); // Place [html5_shortcode_demo_2] in Pages, Posts now.
 add_shortcode('rountree_discount_code', 'rountree_discount_code');
 add_shortcode('rountree_button', 'rountree_button');
 
 // Shortcodes above would be nested like this -
 // [html5_shortcode_demo] [html5_shortcode_demo_2] Here's the page title! [/html5_shortcode_demo_2] [/html5_shortcode_demo]
 
+/**
+* Filter the single_template with our custom function
+*/
+add_filter('single_template', 'rountree_single_template');
+
+/**
+* Single template function which will choose our template
+*/
+function rountree_single_template($single) {
+global $wp_query, $post;
+
+/**
+* Checks for single template by category
+* Check by category slug and ID
+*/
+foreach((array)get_the_category() as $cat) :
+	if(file_exists(TEMPLATEPATH . '/single-cat-' . $cat->slug . '.php'))
+	    return TEMPLATEPATH . '/single-cat-' . $cat->slug . '.php';
+
+	elseif(file_exists(TEMPLATEPATH . '/single-cat-' . $cat->term_id . '.php'))
+        return TEMPLATEPATH . '/single-cat-' . $cat->term_id . '.php';
+        
+    else return TEMPLATEPATH . '/single.php';
+endforeach;
+}
+
+function deselect_blog_parent_nav_item( $classes, $item ) {
+    $navItemCategory = get_category( $item->object_id );
+    $categories = get_the_category(get_the_ID());
+    foreach($categories as $cat) {
+        if (is_single() && $cat->cat_ID === 2 || is_single() && $cat->cat_ID === 6) {
+            if (($key = array_search('current_page_parent', $classes)) !== false) {
+                unset($classes[$key]);
+            }
+        }
+    }
+    if (!$navItemCategory && !is_single()) {
+        if (($key = array_search('current_page_parent', $classes)) !== false) {
+            unset($classes[$key]);
+        }
+    }
+     return $classes;  
+   }
+   
+   add_filter( 'nav_menu_css_class', 'deselect_blog_parent_nav_item', 10, 2);
+
 /*------------------------------------*\
     Custom Post Types
 \*------------------------------------*/
 
-// Create 1 Custom Post type for a Demo, called HTML5-Blank
-function create_post_type_html5()
+// Testimonial custom post type
+function create_post_type_testimonial()
 {
-    register_taxonomy_for_object_type('category', 'html5-blank'); // Register Taxonomies for Category
-    register_taxonomy_for_object_type('post_tag', 'html5-blank');
-    register_post_type('html5-blank', // Register Custom Post Type
+    register_taxonomy_for_object_type('post_tag', 'rountree');
+    register_post_type('rountree', // Register Custom Post Type
         array(
         'labels' => array(
-            'name' => __('HTML5 Blank Custom Post', 'html5blank'), // Rename these to suit
-            'singular_name' => __('HTML5 Blank Custom Post', 'html5blank'),
-            'add_new' => __('Add New', 'html5blank'),
-            'add_new_item' => __('Add New HTML5 Blank Custom Post', 'html5blank'),
-            'edit' => __('Edit', 'html5blank'),
-            'edit_item' => __('Edit HTML5 Blank Custom Post', 'html5blank'),
-            'new_item' => __('New HTML5 Blank Custom Post', 'html5blank'),
-            'view' => __('View HTML5 Blank Custom Post', 'html5blank'),
-            'view_item' => __('View HTML5 Blank Custom Post', 'html5blank'),
-            'search_items' => __('Search HTML5 Blank Custom Post', 'html5blank'),
-            'not_found' => __('No HTML5 Blank Custom Posts found', 'html5blank'),
-            'not_found_in_trash' => __('No HTML5 Blank Custom Posts found in Trash', 'html5blank')
+            'name' => __('Testimonials', 'rountree'), // Rename these to suit
+            'singular_name' => __('Testimonial', 'rountree'),
+            'add_new' => __('Add New', 'rountree'),
+            'add_new_item' => __('Add New Testimonial', 'rountree'),
+            'edit' => __('Edit', 'rountree'),
+            'edit_item' => __('Edit Testimonial', 'rountree'),
+            'new_item' => __('New Testimonial', 'rountree'),
+            'view' => __('View Testimonial', 'rountree'),
+            'view_item' => __('View Testimonial', 'rountree'),
+            'search_items' => __('Search Testimonial', 'rountree'),
+            'not_found' => __('No Testimonials found', 'rountree'),
+            'not_found_in_trash' => __('No Testimonials found in Trash', 'rountree')
         ),
         'public' => true,
         'hierarchical' => true, // Allows your posts to behave like Hierarchy Pages
@@ -466,32 +517,18 @@ function create_post_type_html5()
         'supports' => array(
             'title',
             'editor',
-            'excerpt',
-            'thumbnail'
+		    'custom-fields'
         ), // Go to Dashboard Custom HTML5 Blank post for supports
         'can_export' => true, // Allows export in Tools > Export
         'taxonomies' => array(
-            'post_tag',
-            'category'
-        ) // Add Category and Post Tags support
+		'category'
+        ) // Add Post Tags support
     ));
 }
 
 /*------------------------------------*\
     ShortCode Functions
 \*------------------------------------*/
-
-// Shortcode Demo with Nested Capability
-function html5_shortcode_demo($atts, $content = null)
-{
-    return '<div class="shortcode-demo">' . do_shortcode($content) . '</div>'; // do_shortcode allows for nested Shortcodes
-}
-
-// Shortcode Demo with simple <h2> tag
-function html5_shortcode_demo_2($atts, $content = null) // Demo Heading H2 shortcode, allows for nesting within above element. Fully expandable.
-{
-    return '<h2>' . $content . '</h2>';
-}
 
 // Render an inline message to display a discount
 function rountree_discount_code($atts, $content = 'Ask how you can save up to 15% on classes.', $tag)
@@ -501,7 +538,7 @@ function rountree_discount_code($atts, $content = 'Ask how you can save up to 15
         'headline' => 'Get a discount!'
     ), $atts );
 
-	return '<p class="message warning"><em>' . $a['headline'] . '</em>' . $content . '</p>';
+	return '<p class="alert alert-warning"><strong>' . $a['headline'] . '</strong>:&nbsp;' . $content . '</p>';
 }
 
 // Render a link as a button
@@ -512,5 +549,33 @@ function rountree_button($atts, $content = 'Click here!', $tag)
         'url' => '#'
     ), $atts );
 
-	return '<a class="button default" href="' . $a['url'] . '" title="' . $content . '">' . $content . '</a>';
+	return '<a class="btn btn-default" href="' . $a['url'] . '" title="' . $content . '">' . $content . '</a>';
+}
+
+add_filter( 'sc_payment_details', 'rountree_sc_payment_details', 20, 2);
+
+function rountree_sc_payment_details( $html, $charge_response ) {
+    $html = '<div class="modal fade in" tabindex="-1" data-backdrop="true" role="dialog">' . "\n";
+    $html .= '<div class="modal-dialog" role="document">' . "\n";    
+    $html .= '<div class="modal-content">' . "\n";   
+    $html .= '<div class="modal-header">' . "\n";
+    $html .= '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> ' . "\n";    
+    $html .= '<h4 class="modal-title">Thank you, ' . $charge_response->source->name . '!</h4>' . "\n";
+    $html .= '</div>' . "\n";
+    $html .= '<div class="modal-body">' . "\n"; 
+    $html .= '<p>Your payment for ' . $charge_response->description . ' has been sent.</p>' . "\n";
+    $html .= '<p>You should receive an email confirmation at ' . $charge_response->receipt_email . '. </p>' . "\n";
+    $html .= '<div class="entry-spacer compact"></div>' . "\n";   
+    $html .= '<h2>Payment Details</h2>' . "\n";         
+    $html .= '<dl class="detail-list">' . "\n";
+    $html .= '<dt>Class</dt><dd>' . $charge_response->description . '</dd>' . "\n";        
+    $html .= '<dt>Total Paid</dt><dd>' . Stripe_Checkout_Misc::to_formatted_amount( $charge_response->amount, $charge_response->currency ) . ' ' . strtoupper( $charge_response->currency ) . '</dd>' . "\n";
+    $html .= '<dt>Card</dt><dd>' . $charge_response->source->brand . ' *' . $charge_response->source->last4 . '</dd>' . "\n";            
+    $html .= '<dt>Transaction ID</dt><dd>' . $charge_response->id . '</dd>' . "\n";    
+    $html .= '</dl>' . "\n";
+    $html .= '</div>' . "\n";
+    $html .= '</div>' . "\n";
+    $html .= '</div>' . "\n";
+    $html .= '</div>' . "\n";
+    return $html;
 }

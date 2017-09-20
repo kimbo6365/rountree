@@ -1,41 +1,29 @@
-<?php if (have_posts()): while (have_posts()) : the_post(); ?>
+<?php // Exclude posts from Class-Series, Workshops, and Shows categories ?>
+<?php $query = new WP_Query( "cat=-2,-3,-4&paged=$paged" ); ?>
+<?php if ($query->have_posts()): while ($query->have_posts()) : $query->the_post(); ?>
+	<div class="row">
+		<!-- article -->
+		<article id="post-<?php the_ID(); ?>" class="blog-post col-sm-12" <?php post_class(); ?>>
 
-	<!-- article -->
-	<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-
-		<!-- post thumbnail -->
-		<?php if ( has_post_thumbnail()) : // Check if thumbnail exists ?>
-			<a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>">
-				<?php the_post_thumbnail(array(120,120)); // Declare pixel size you need inside the array ?>
-			</a>
-		<?php endif; ?>
-		<!-- /post thumbnail -->
-
-		<!-- post title -->
-		<h2>
-			<a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>"><?php the_title(); ?></a>
-		</h2>
-		<!-- /post title -->
-
-		<!-- post details -->
-		<span class="date">
-			<time datetime="<?php the_time('Y-m-d'); ?> <?php the_time('H:i'); ?>">
-				<?php the_date(); ?> <?php the_time(); ?>
-			</time>
-		</span>
-		<span class="author"><?php _e( 'Published by', 'html5blank' ); ?> <?php the_author_posts_link(); ?></span>
-		<span class="comments"><?php if (comments_open( get_the_ID() ) ) comments_popup_link( __( 'Leave your thoughts', 'html5blank' ), __( '1 Comment', 'html5blank' ), __( '% Comments', 'html5blank' )); ?></span>
-		<!-- /post details -->
-
-		<?php html5wp_excerpt('html5wp_index'); // Build your custom callback length in functions.php ?>
-
-		<?php edit_post_link(); ?>
-
-	</article>
-	<!-- /article -->
-
+			<div class="col-sm-10 col-sm-offset-1">
+					<h2>
+						<a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>"><?php the_title(); ?></a>
+					</h2>
+					<span class="post-meta-information">
+						Posted on
+						<time datetime="<?php the_time('Y-m-d'); ?> <?php the_time('H:i'); ?>">
+							<?php the_date(); ?> <?php the_time(); ?>
+						</time>
+					</span>
+					<div class="blog-excerpt">
+						<p><?php the_excerpt(); ?></p>
+					</div>
+				</div>
+		</article>
+		<!-- /article -->
+	</div>
+	<?php wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly ?>
 <?php endwhile; ?>
-
 <?php else: ?>
 
 	<!-- article -->
