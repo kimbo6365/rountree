@@ -20,6 +20,9 @@
 @import "partials/sidebar";
 @import "partials/footer";
 @import "partials/print";
+@import "partials/testimonials";
+@import "partials/gallery";
+@import "partials/media-tile";
 
 h1, h2, h3, h4, h5, h6,
 .nav,
@@ -45,39 +48,51 @@ body {
 	border-radius: 50%;
 }
 
-.media-tile {
-	@include make-row();
-
-	.class-image {
-		@include make-sm-column(3);
-    @include make-sm-column-offset(1);
-
-    img {
-      width: 100%;
-      max-width: 100%;
-      height: auto;
+.show-details {
+  padding-left: 0;
+  li {
+    display: flex;
+    list-style-type: none;
+    margin-bottom: 10px;
+    &:last-of-type {
+      margin-bottom: 0;
     }
-	}
- 	.class-details {
-		@include make-sm-column(7);
+    .maps-link {
+      color: $link-color;
+    }
+  }
+  strong {
+    .single-class-post & {
+      text-align: right;
+      width: 100px;
+    }
+    margin-right: 10px;
+    flex: 0 0 auto;
+    &:after {
+      content: ':\00a0';
+    }
+  }
+  span {
+    flex: 1 1 auto;
+  }
+  .btn {
+    margin-top: 15px;
+  }
+}
 
-		> h1 {
-      margin-top: 0;
-      text-align: left;
-		}
+.show-description {
+  margin-top: 30px;
+  @include make-sm-column-offset(1);
+  @include make-sm-column(10);
 
-		> p {
-			text-align: justify;
-		}
-	}
-
-	.alert {
-		margin: 15px 0;
-	}
+  .show-details {
+    margin-top: 30px;
+  }
 }
 
 .detail-list {
   @include clearfix();
+
   dt, dd {
     float: left;
     line-height: 2;
@@ -113,49 +128,6 @@ body {
 
 .single-class-post {
   margin-top: 30px;
-}
-
-.testimonial-header {
-	text-align: center;
-	margin-top: 100px;
-}
-
-.testimonials {
-  @include make-row();
-
-	h2 {
-		@include make-sm-column(10);
-    @include make-sm-column-offset(1);
-	}
-
-	> li {
-		@include make-sm-column(10);
-		@include make-sm-column-offset(1);
-		list-style-type: none;
-		padding: 30px 0;
-  }
-
-  .testimonial {
-		font-family: 'Zilla Slab';
-    font-size: 21px;
-    &:before {
-      content: "\201C";
-      font-family: 'Spirax';
-      font-size: 148px;
-      position: absolute;
-      line-height: .9;
-      color: #bbb;
-    }
-  }
-
-  .testimonial-text {
-    padding-left: 4em;
-  }
-
-  .testimonial-author {
-    margin: 15px 0 0;
-    color: #999;
-  }
 }
 
 .blog-post {
@@ -233,44 +205,6 @@ body {
 	}
 }
 
-nav .menu {
-  margin-bottom: 30px;
-	ul {
-		background: #ebebeb;
-		list-style-type: none;
-		padding: 10px 15px;
-		margin: 0;
-		border-bottom: 1px solid #ccc;
-		li {
-			margin-right: 15px;
-			font-size: 16px;
-			display: inline-block;
-			border-radius: 5px;
-
-			a {
-				padding: 10px 15px;
-				line-height: 24px;
-				display: block;
-			}
-
-			&:hover {
-				background: darken($brand-primary, 20%);
-				a {
-					color: #fff;
-					text-decoration: none;
-				}
-			}
-		}
-    .current_page_item,
-    .current-menu-item {
-			background: darken($brand-primary, 20%);
-			a {
-				color: #fff;
-			}
-		}
-	}
-}
-
 footer {
   font-family: 'Zilla Slab';
 	background: darken($brand-primary, 20%);
@@ -319,19 +253,6 @@ footer {
   }
 }
 
-.entry-spacer {
-	margin: 50px auto 100px;
-	border-bottom: 1px solid #dbdbdb;
-  width: 50%;
-
-  &.class-testimonials {
-    margin: 30px auto;
-  }
-  &.compact {
-    margin: 50px auto;
-  }
-}
-
 .rountree .stripe-button-el {
   @extend .btn-lg;
   @extend .btn-primary;
@@ -345,42 +266,8 @@ footer {
   }
 }
 
-.page-numbers {
-  border-radius: 0;
-  @extend .pagination;
-  @extend .pagination-lg;
-}
-
-div.pagination {
-  width: 100%;
-  text-align: center;
-}
-
 .home-page {
   margin-top: 50px;
-}
-
-.gallery-section {
-  margin-top: 30px;
-}
-
-.gallery-image {
-  img {
-    max-width: 100%;
-    width: 100%;
-    height: auto;
-    border: 1px solid #dbdbdb;
-  }
-
-  h3 {
-    font-size: 18px;
-    text-align: left;
-  }
-
-  > p {
-    font-size: 16px;
-    text-align: left;
-  }
 }
 
 .comments {
@@ -400,64 +287,6 @@ div.pagination {
       height: 42px;
       padding: 5px;
       border-radius: 50%;
-    }
-  }
-}
-
-.testimonials.carousel {
-  margin-top: 0;
-  background: #dbdbdb;
-  padding: 50px 30px;
-  box-shadow: inset 0 0 150px rgba(0,0,0,0.25);
-  border-bottom: 1px solid #aaa;
-
-  h2 {
-    margin: 0 0 30px;
-    width: 100%;
-  }
-
-  .item {
-    min-height: 200px;
-  }
-
-  .testimonial {
-    background: #fff;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-    padding: 30px;
-    width: 65%;
-    margin: 0 auto 3px; // Don't crop the shadow
-  }
-}
-
-.carousel-control {
-  &.left, &.right {
-    background: transparent;
-  }
-  .icon {
-    font-size: 36px;
-  }
-}
-
-.carousel-indicators {
-  display: inline-block;
-  position: static;
-  margin: 0 0 30px;
-  width: 100%;
-  li {
-    height: 14px;
-    width: 14px;
-    display: inline-block;
-    border-color: #666;
-    vertical-align: middle;
-    margin-right: 5px;
-
-    &.active {
-      height: 14px;
-      width: 14px;
-      background: #666;
-      margin-right: 5px;
     }
   }
 }

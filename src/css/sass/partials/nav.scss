@@ -4,11 +4,40 @@
  * Menus
  */
 
+nav.nav {
+  margin-bottom: 30px;
+	ul {
+		background: #ebebeb;
+		list-style-type: none;
+		padding: 10px 15px;
+		margin: 0;
+		border-bottom: 1px solid #ccc;
+		li {
+			margin-right: 15px;
+			font-size: 16px;
+			display: inline-block;
+			border-radius: 5px;
 
-.nav {}
+			a {
+				padding: 10px 15px;
+				line-height: 24px;
+				display: block;
+			}
 
-.menu {}
-
-.sub-menu {}
-
-.menu-item {}
+			&:hover {
+				background: darken($brand-primary, 20%);
+				a {
+					color: #fff;
+					text-decoration: none;
+				}
+			}
+		}
+    .current_page_item,
+    .current-menu-item {
+			background: darken($brand-primary, 20%);
+			a {
+				color: #fff;
+			}
+		}
+	}
+}

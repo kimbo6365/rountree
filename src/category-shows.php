@@ -24,37 +24,33 @@
 				<article id="post-<?php the_ID(); ?>" class="class-listing" <?php post_class();  ?>>
 						<?php
 							$cast = get_post_meta(get_the_ID(), 'cast', true);
+							$location_name = get_post_meta(get_the_ID(), 'location_name', true);
+							$location_address = get_post_meta(get_the_ID(), 'location_address', true);
 							$director = get_post_meta(get_the_ID(), 'director', true);
 							$dates = get_post_meta(get_the_ID(), 'dates', true);
 							$cost = get_post_meta(get_the_ID(), 'cost', true);
 						?>
 						<section class="media-tile">
-						<div class="class-image">
+						<a class="class-image" href="<?php the_permalink() ?>">
 							<img class="circle" src="<?php the_post_thumbnail_url('medium'); ?>" alt="<?php the_title(); ?>" />
-						</div>
+						</a>
 						<div class="class-details">
-							<h1><?php the_title(); ?></h1>
+							<h1>
+								<a href="<?php the_permalink() ?>">
+									<?php the_title(); ?>
+								</a>
+							</h1>
 							<?php the_content(); ?>
-							<dl class="detail-list">
+							<ul class="show-details">
 								<?php
-									if (!empty($dates))
-									{
-										echo '<dt>Dates</dt><dd>' . $dates . '</dd>';
+									if (!empty($dates)) echo '<li><strong>Dates</strong><span>' . $dates . '</span></li>';
+									if (!empty($location_name) && !empty($location_address)) {
+										echo '<li><strong>Location</strong><span>' . $location_name . '&nbsp;&mdash;&nbsp;<a class="maps-link" target="_blank" href="https://maps.google.com/?q=term' . urlencode($location_address) . '">' . $location_address . '</a></span></li>';
 									}
-									if (!empty($cast))
-									{
-										echo '<dt>Cast</dt><dd>' . $cast . '</dd>';
-									}
-									if (!empty($director))
-									{
-										echo '<dt>Director</dt><dd>' . $director . '</dd>';
-									}
-									if (!empty($cost))
-									{
-										echo '<dt>Cost</dt><dd>' . $cost . '</dd>';
-									}
+									if (!empty($cost)) echo '<li><strong>Cost</strong><span>$' . $cost . '</span></li>';
+									if (!empty($ticket_link)) echo '<li><a class="btn btn-lg btn-primary" href="' . $ticket_link . '">Buy tickets now!</a></li>';
 								?>
-							</dl>
+							</ul>
 						</div>
 					</section>
 				<?php if (($wp_query->current_post +1) < ($wp_query->post_count)): ?>

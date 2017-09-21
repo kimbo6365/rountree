@@ -1,0 +1,31 @@
+
+.media-tile {
+	@include make-row();
+
+	.class-image {
+		@include make-sm-column(3);
+    @include make-sm-column-offset(1);
+
+    img {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+    }
+	}
+ 	.class-details {
+		@include make-sm-column(7);
+
+		> h1 {
+      margin-top: 0;
+      text-align: left;
+		}
+
+		> p {
+			text-align: justify;
+		}
+	}
+
+	.alert {
+		margin: 15px 0;
+	}
+}

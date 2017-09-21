@@ -21,3 +21,27 @@
 .reset-box {
   @include reset-box;
 }
+
+.entry-spacer {
+	margin: 50px auto 100px;
+	border-bottom: 1px solid #dbdbdb;
+  width: 50%;
+
+  &.class-testimonials {
+    margin: 30px auto;
+  }
+  &.compact {
+    margin: 50px auto;
+  }
+}
+
+.page-numbers {
+  border-radius: 0;
+  @extend .pagination;
+  @extend .pagination-lg;
+}
+
+div.pagination {
+  width: 100%;
+  text-align: center;
+}
