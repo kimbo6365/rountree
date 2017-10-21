@@ -3,6 +3,7 @@
 	@include make-row();
 
 	.class-image {
+    display: block;
 		@include make-sm-column(3);
     @include make-sm-column-offset(1);
 
@@ -26,6 +27,6 @@
 	}
 
 	.alert {
-		margin: 15px 0;
+		margin: 5px 0 0;
 	}
 }

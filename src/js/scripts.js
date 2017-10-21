@@ -1,17 +1,19 @@
-let classes, workshops;
-
 (function( root, $, undefined ) {
 	"use strict";
 
 	$(function () {
-		$(".modal").modal();
+		let workshops = $("*[data-post-type=\"workshop\"]");
+		let classes = $("*[data-post-type=\"class\"]");
+		$(".modal").modal({
+			show: false
+		});
 		$("#testimonial-carousel").carousel();
 		$("#btn-select-classes").off().on("click", function() {
 			if (classes) {
 				classes.appendTo("#classes-list");
 				classes = null;
 			}
-			workshops = $("*[data-post-category=\"3\"]").detach();
+			workshops.detach();
 			$(this).button("toggle");
 		});
 		$("#btn-select-workshops").off().on("click", function() {
@@ -19,7 +21,7 @@ let classes, workshops;
 				workshops.appendTo("#classes-list");
 				workshops = null;
 			}
-			classes = $("*[data-post-category=\"2\"]").detach();
+			classes.detach();
 			$(this).button("toggle");
 		});
 		$("#btn-select-all").off().on("click", function() {
@@ -54,6 +56,12 @@ let classes, workshops;
 				$(this).find('a').toggleClass('rotated');
 			});
 		}
+
+		$('.js-request-class').on('click', function() {
+			const $modal = $('.js-request-class-modal');
+			$modal.find('.modal-title').html(`Request ${this.dataset.requestedClass} Class`);
+			$modal.modal('show');
+		});
 
 	// END ON LOAD
 	});

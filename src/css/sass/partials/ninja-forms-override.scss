@@ -1,0 +1,15 @@
+.nf-form-fields-required {
+  font-size: .8;
+  margin-bottom: 15px;
+}
+
+.nf-form-title {
+  .contact-page &,
+  .js-request-class-modal & {
+    display: none;
+  }
+}
+
+.ninja-forms-field {
+  @extend .form-control;
+}

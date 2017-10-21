@@ -1,39 +1,51 @@
 <section class="media-tile" >
-  <a class="class-image" href="<?php the_permalink() ?>">
+  <a class="item-image" href="<?php the_permalink() ?>">
     <img class="circle" src="<?php the_post_thumbnail_url('medium'); ?>" alt="<?php the_title(); ?>" />
   </a>
-  <div class="class-details">
+  <div class="item-details">
     <h1><a href="<?php the_permalink() ?>"><?php the_title(); ?></a></h1>  
     <?php // Show the excerpt when we're viewing a lists of posts. Show the content when we're viewing a single post. ?>
     <p><?php $wp_query->posts[0]->post_type == "page" ? the_excerpt() : the_content(); ?></p>
     <?php
-      $class_discount = get_post_meta($post->ID, 'discount', true);
-      if (!empty($class_discount))
-      {
-        echo do_shortcode($class_discount);
+      $dates = get_post_meta(get_the_ID(), 'class_dates', true);
+      $cost = get_post_meta(get_the_ID(), 'class_cost', true);
+      $location_name = get_post_meta(get_the_ID(), 'class_location_name', true);
+      $location_address = get_post_meta(get_the_ID(), 'class_location_address', true);
+      $prerequisites = get_post_meta(get_the_ID(), 'class_prerequisites', true);      
+      $discount_end_date = get_post_meta(get_the_ID(), 'class_discount_end_date', true);
+      $discount_amount = get_post_meta(get_the_ID(), 'class_discount_amount', true);
+      if ($discount_end_date) {
+        // The date is stored in ms and the PHP date functions expect s, so multiply by 1000
+        $discount_end_date = strtotime($discount_end_date);
+      }
+      $cost_alert = '';
+
+      // If the discount date has not passed, reduce the cost by the discount amount
+      if ($discount_end_date >= strtotime('00:00')) { 
+        $original_cost = $cost;
+        $cost -= $discount_amount;
+        $displayCost = '<em>(<strike>$' . $original_cost . '</strike>)</em>&nbsp;<strong>$' . $cost . '*</strong>';
+        $cost_alert = '<div class="alert alert-warning"><strong>Early Bird Discount:</strong> Save $' . $discount_amount . ' if you sign up before ' . date('F j', $discount_end_date) . '</div>';
+      } else {
+        $displayCost = '$' . $cost;
       }
     ?>
-    <dl class="detail-list">
-      <?php
-        $postID = get_the_ID();
-        $class_dates = get_post_meta($post->ID, 'dates', true);
-        if (!empty($class_dates))
-        {
-          echo '<dt>Dates</dt><dd>' . $class_dates . '</dd>';
+    <ul class="info-block">
+      <?php 
+        if (!empty($cost)) {
+          echo do_shortcode("[stripe verify_zip=\"true\" billing=\"true\" amount=\"" . $cost . "00\" description=\"" . get_the_title() . "\"]");
         }
-        $class_cost = get_post_meta($post->ID, 'cost', true);
-        if (!empty($class_cost))
-        {
-          echo '<dt>Cost</dt><dd>$' . $class_cost . '</dd>';
+        if (!empty($dates)) echo '<li><strong>Dates</strong><span>' . $dates . '</span></li>';
+        if (!empty($cost)) echo '<li><strong>Cost</strong><span>' . $displayCost . $cost_alert . '</span></li>';
+        // Only show the location & prerequisites fields on single page.
+        if (is_single()) {
+          if (!empty($location_name) && !empty($location_address)) {
+            echo '<li><strong>Location</strong><span>' . $location_name . '&nbsp;&mdash;&nbsp;' . buildGoogleMapsLink($location_address) . '</span></li>';
+          }
+          if (!empty($prerequisites)) echo '<li><strong>Prerequisites</strong><span>$' . $prerequisites . '</span></li>';							
         }
+        if (empty($cost)) echo '<a class="btn btn-default btn-lg btn-info js-request-class" data-requested-class="' . get_the_title() . '">Request this class</a>';
       ?>
-    </dl>
-    <?php if ($class_cost > 0): ?>
-      <?php echo do_shortcode("[stripe verify_zip=\"true\" billing=\"true\" amount=\"" . $class_cost . "00\" description=\"" . get_the_title() . "\"]"); ?>
-    <?php else: ?>
-      <div class="btn btn-default btn-lg btn-info">
-        Request this class
-      </div>
-    <?php endif; ?>
+    </ul>
   </div>
-</section>
+  </section>

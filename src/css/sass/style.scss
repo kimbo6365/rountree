@@ -23,6 +23,8 @@
 @import "partials/testimonials";
 @import "partials/gallery";
 @import "partials/media-tile";
+@import "partials/info-block";
+@import "partials/ninja-forms-override";
 
 h1, h2, h3, h4, h5, h6,
 .nav,
@@ -48,38 +50,6 @@ body {
 	border-radius: 50%;
 }
 
-.show-details {
-  padding-left: 0;
-  li {
-    display: flex;
-    list-style-type: none;
-    margin-bottom: 10px;
-    &:last-of-type {
-      margin-bottom: 0;
-    }
-    .maps-link {
-      color: $link-color;
-    }
-  }
-  strong {
-    .single-class-post & {
-      text-align: right;
-      width: 100px;
-    }
-    margin-right: 10px;
-    flex: 0 0 auto;
-    &:after {
-      content: ':\00a0';
-    }
-  }
-  span {
-    flex: 1 1 auto;
-  }
-  .btn {
-    margin-top: 15px;
-  }
-}
-
 .show-description {
   margin-top: 30px;
   @include make-sm-column-offset(1);
@@ -87,22 +57,6 @@ body {
 
   .show-details {
     margin-top: 30px;
-  }
-}
-
-.detail-list {
-  @include clearfix();
-
-  dt, dd {
-    float: left;
-    line-height: 2;
-  }
-  dt {
-    clear: both;
-    font-weight: bold;
-    &:after {
-      content: ':\00a0';
-    }
   }
 }
 
@@ -122,9 +76,6 @@ body {
   margin-bottom: 50px;
 }
 
-.contact-page .nf-form-title h3 {
-  display: none;
-}
 
 .single-class-post {
   margin-top: 30px;
@@ -314,8 +265,40 @@ footer {
 
 .modal-title {
   color: #fff;
+  font-size: 30px;
 }
 
 .alert {
   font-size: 16px;
+  text-align: left;
 }
+
+.showtime-listing {
+  @include make-sm-column(10);
+  @include make-sm-column-offset(1);
+}
+
+.show-grid {
+  width: 100%;
+  table-layout: fixed;
+  text-align: left;
+
+  thead {
+    .show-date-time {
+      width: 200px;
+    }
+    .show-location {
+      width: 100%;
+    }
+    .show-ticket-info {
+      width: 200px;
+    }
+  }
+
+  .maps-link {
+    color: $link-color;
+  }
+}
+
+// This always goes last!
+@import "responsive";

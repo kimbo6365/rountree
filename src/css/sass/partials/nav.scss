@@ -32,12 +32,13 @@ nav.nav {
 				}
 			}
 		}
-    .current_page_item,
-    .current-menu-item {
-			background: darken($brand-primary, 20%);
-			a {
-				color: #fff;
-			}
-		}
 	}
+}
+.current_page_item,
+.current-menu-item,
+.current-post-parent {
+  background: darken($brand-primary, 20%);
+  a {
+    color: #fff;
+  }
 }

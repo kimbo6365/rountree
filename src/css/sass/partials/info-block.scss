@@ -1,0 +1,56 @@
+.info-block {
+  padding-left: 0;
+  li {
+    display: flex;
+    list-style-type: none;
+    margin-bottom: 10px;
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+    .maps-link {
+      color: $link-color;
+    }
+    > strong {
+      .single-class-post & {
+        text-align: right;
+        width: 100px;
+      }
+      margin-right: 10px;
+      flex: 0 0 auto;
+      &:after {
+        content: ':\00a0';
+      }
+    }
+    > span {
+      flex: 1 1 auto;
+    }
+  }
+
+  .btn, button {
+    margin: 10px 0 30px;
+  }
+}
+
+@media screen and (max-width: $screen-xs) {
+  .info-block {
+    li {
+      flex-direction: column;
+      border-bottom: 1px solid #dbdbdb;
+      padding-bottom: 15px;
+      text-align: left;
+      &:last-of-type {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+      > strong {
+        .single-class-post & {
+          width: auto;
+          text-align: left;
+        }
+        &:after {
+          content: '';
+        }
+      }
+    }
+  }
+}

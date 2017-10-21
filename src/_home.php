@@ -7,10 +7,10 @@
 				<!-- article -->
 				<article>
 					<section class="media-tile">
-						<div class="class-image">
+						<div class="item-image">
 							<img class="circle" src="<?php echo wp_get_attachment_image_src(72, 'medium')[0]; ?>" />
 						</div>
-						<div class="class-details">
+						<div class="item-details">
 							<h1>About Amanda</h1>
 							<p><?php the_content(); ?></p>
 						</div>

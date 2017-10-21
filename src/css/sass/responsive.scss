@@ -180,4 +180,29 @@
   .home-page {
     margin-top: 0;
   }
+
+  .show-grid {
+    thead {
+      display: none;
+    }
+    > tbody > tr > td {
+      display: block;
+      border: 0;
+      &:first-of-type {
+        font-weight: bold;
+        border-bottom: 2px solid $gray-lighter;
+      }
+    }
+    .show-ticket-cost {
+      &:before {
+        content: 'Tickets';
+        margin-right: 8px;
+        display: inline-block;
+      }
+    }
+    tr {
+      display: block;
+      margin-bottom: 15px;
+    }
+  }
 }

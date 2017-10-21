@@ -9,7 +9,28 @@
 
 			</footer>
 			<!-- /footer -->
-
+			<?php
+				$classesList = get_posts(['post_type' => ['class', 'workshop']]);
+				$output = '';
+				foreach($classesList as $index => $post) {
+					$output .= '<div class="js-classes-select-option" data-class-id="'. $post->ID .'" data-class-name="'. $post->post_title .'"></div>';
+				}
+				echo $output;
+			?>
+			<div class="modal fade js-request-class-modal">
+				<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h5 class="modal-title">Request a Class</h5>
+					</div>
+					<div class="modal-body">
+						<?php echo do_shortcode('[ninja_form id=3]'); ?>
+					</div>
+				</div>
+			</div>
 		</div>
 		<!-- /wrapper -->
 

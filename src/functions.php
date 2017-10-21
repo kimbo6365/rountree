@@ -394,7 +394,9 @@ add_action('wp_print_scripts', 'html5blank_conditional_scripts'); // Add Conditi
 add_action('get_header', 'enable_threaded_comments'); // Enable Threaded Comments
 add_action('wp_enqueue_scripts', 'html5blank_styles'); // Add Theme Stylesheet
 add_action('init', 'register_html5_menu'); // Add HTML5 Blank Menu
-add_action('init', 'create_post_type_testimonial'); // Add our HTML5 Blank Custom Post Type
+add_action('init', 'create_post_type_testimonial'); // Add our Testimonial Post Type
+add_action('init', 'create_post_type_class'); // Add our Class Post Type
+add_action('init', 'create_post_type_show'); // Add our Show Post Type
 add_action('widgets_init', 'my_remove_recent_comments_style'); // Remove inline Recent Comment Styles from wp_head()
 add_action('init', 'html5wp_pagination'); // Add our HTML5 Pagination
 
@@ -413,9 +415,6 @@ add_filter('body_class', 'add_slug_to_body_class'); // Add slug to body class (S
 add_filter('widget_text', 'do_shortcode'); // Allow shortcodes in Dynamic Sidebar
 add_filter('widget_text', 'shortcode_unautop'); // Remove <p> tags in Dynamic Sidebars (better!)
 add_filter('wp_nav_menu_args', 'my_wp_nav_menu_args'); // Remove surrounding <div> from WP Navigation
-// add_filter('nav_menu_css_class', 'my_css_attributes_filter', 100, 1); // Remove Navigation <li> injected classes(Commented out 
-// add_filter('nav_menu_item_id', 'my_css_attributes_filter', 100, 1); // Remove Navigation <li> injected ID (Commented out by default)
-// add_filter('page_css_class', 'my_css_attributes_filter', 100, 1); // Remove Navigation <li> Page ID's (Commented out by default)
 add_filter('the_category', 'remove_category_rel_from_category_list'); // Remove invalid rel attribute
 add_filter('the_excerpt', 'shortcode_unautop'); // Remove auto <p> tags in Excerpt (Manual Excerpts only)
 add_filter('the_excerpt', 'do_shortcode'); // Allows Shortcodes to be executed in Excerpt (Manual Excerpts only)
@@ -441,52 +440,6 @@ add_shortcode('rountree_button', 'rountree_button');
 // Shortcodes above would be nested like this -
 // [html5_shortcode_demo] [html5_shortcode_demo_2] Here's the page title! [/html5_shortcode_demo_2] [/html5_shortcode_demo]
 
-/**
-* Filter the single_template with our custom function
-*/
-add_filter('single_template', 'rountree_single_template');
-
-/**
-* Single template function which will choose our template
-*/
-function rountree_single_template($single) {
-global $wp_query, $post;
-
-/**
-* Checks for single template by category
-* Check by category slug and ID
-*/
-foreach((array)get_the_category() as $cat) :
-	if(file_exists(TEMPLATEPATH . '/single-cat-' . $cat->slug . '.php'))
-	    return TEMPLATEPATH . '/single-cat-' . $cat->slug . '.php';
-
-	elseif(file_exists(TEMPLATEPATH . '/single-cat-' . $cat->term_id . '.php'))
-        return TEMPLATEPATH . '/single-cat-' . $cat->term_id . '.php';
-        
-    else return TEMPLATEPATH . '/single.php';
-endforeach;
-}
-
-function deselect_blog_parent_nav_item( $classes, $item ) {
-    $navItemCategory = get_category( $item->object_id );
-    $categories = get_the_category(get_the_ID());
-    foreach($categories as $cat) {
-        if (is_single() && $cat->cat_ID === 2 || is_single() && $cat->cat_ID === 6) {
-            if (($key = array_search('current_page_parent', $classes)) !== false) {
-                unset($classes[$key]);
-            }
-        }
-    }
-    if (!$navItemCategory && !is_single()) {
-        if (($key = array_search('current_page_parent', $classes)) !== false) {
-            unset($classes[$key]);
-        }
-    }
-     return $classes;  
-   }
-   
-   add_filter( 'nav_menu_css_class', 'deselect_blog_parent_nav_item', 10, 2);
-
 /*------------------------------------*\
     Custom Post Types
 \*------------------------------------*/
@@ -494,8 +447,8 @@ function deselect_blog_parent_nav_item( $classes, $item ) {
 // Testimonial custom post type
 function create_post_type_testimonial()
 {
-    register_taxonomy_for_object_type('post_tag', 'rountree');
-    register_post_type('rountree', // Register Custom Post Type
+    register_taxonomy_for_object_type('post_tag', 'testimonial');
+    register_post_type('testimonial', // Register Custom Post Type
         array(
         'labels' => array(
             'name' => __('Testimonials', 'rountree'), // Rename these to suit
@@ -512,8 +465,6 @@ function create_post_type_testimonial()
             'not_found_in_trash' => __('No Testimonials found in Trash', 'rountree')
         ),
         'public' => true,
-        'hierarchical' => true, // Allows your posts to behave like Hierarchy Pages
-        'has_archive' => true,
         'supports' => array(
             'title',
             'editor',
@@ -521,9 +472,112 @@ function create_post_type_testimonial()
         ), // Go to Dashboard Custom HTML5 Blank post for supports
         'can_export' => true, // Allows export in Tools > Export
         'taxonomies' => array(
-		'category'
-        ) // Add Post Tags support
+		    'category'
+        ),
+        'menu_icon' => 'dashicons-format-quote',
+        'menu_position' => 20
     ));
+}
+
+// Class custom post type
+function create_post_type_class()
+{
+    register_post_type('class', // Register Custom Post Type
+        array(
+        'labels' => array(
+            'name' => __('Classes', 'rountree'), // Rename these to suit
+            'singular_name' => __('Class', 'rountree'),
+            'add_new' => __('Add New', 'rountree'),
+            'add_new_item' => __('Add New Class', 'rountree'),
+            'edit' => __('Edit', 'rountree'),
+            'edit_item' => __('Edit Class', 'rountree'),
+            'new_item' => __('New Class', 'rountree'),
+            'view' => __('View Class', 'rountree'),
+            'view_item' => __('View Class', 'rountree'),
+            'search_items' => __('Search Classes', 'rountree'),
+            'not_found' => __('No Classes found', 'rountree'),
+            'not_found_in_trash' => __('No Classes found in Trash', 'rountree')
+        ),
+        'public' => true,
+        'has_archive' => true,
+        'supports' => array(
+            'title',
+            'editor',
+            'custom-fields',
+            'revisions',
+            'thumbnail',
+            'post-formats',
+            'page-attributes' 
+        ), // Go to Dashboard Custom HTML5 Blank post for supports
+        'can_export' => true, // Allows export in Tools > Export
+        'menu_icon' => 'dashicons-groups',
+        'menu_position' => 5,
+        'rewrite' => array( 'slug' => 'classes' )
+    ));
+}
+
+// Show custom post type
+function create_post_type_show()
+{
+    register_post_type('show', // Register Custom Post Type
+        array(
+        'labels' => array(
+            'name' => __('Shows', 'rountree'), // Rename these to suit
+            'singular_name' => __('Show', 'rountree'),
+            'add_new' => __('Add New', 'rountree'),
+            'add_new_item' => __('Add New Show', 'rountree'),
+            'edit' => __('Edit', 'rountree'),
+            'edit_item' => __('Edit Show', 'rountree'),
+            'new_item' => __('New Show', 'rountree'),
+            'view' => __('View Show', 'rountree'),
+            'view_item' => __('View Show', 'rountree'),
+            'search_items' => __('Search Shows', 'rountree'),
+            'not_found' => __('No Shows found', 'rountree'),
+            'not_found_in_trash' => __('No Shows found in Trash', 'rountree')
+        ),
+        'public' => true,
+        'hierarchical' => true,
+        'has_archive' => true,
+        'supports' => array(
+            'title',
+            'editor',
+            'custom-fields',
+            'revisions',
+            'thumbnail',
+            'post-formats',
+            'page-attributes' 
+        ), // Go to Dashboard Custom HTML5 Blank post for supports
+        'can_export' => true, // Allows export in Tools > Export
+        'taxonomies' => array(
+            'category',
+        ),
+        'menu_icon' => 'dashicons-tickets-alt',
+        'menu_position' => 5,
+        'rewrite' => array( 'slug' => 'shows' )
+    ));
+}
+
+add_action('nav_menu_css_class', 'add_current_nav_class', 10, 2 );
+
+function add_current_nav_class($classes, $item) {
+    
+    // Getting the current post details
+    global $post;
+    
+    // Getting the post type of the current post
+    $current_post_type = get_post_type_object(get_post_type($post->ID));
+    $current_post_type_slug = $current_post_type->rewrite['slug'];
+        
+    // Getting the URL of the menu item
+    $menu_slug = strtolower(trim($item->url));
+    
+    // If the menu item URL contains the current post types slug add the current-menu-item class
+    if (strpos($menu_slug,$current_post_type_slug) !== false) {
+       $classes[] = 'current-menu-item';
+    }
+    
+    // Return the corrected set of classes to be added to the menu item
+    return $classes;
 }
 
 /*------------------------------------*\
@@ -577,5 +631,12 @@ function rountree_sc_payment_details( $html, $charge_response ) {
     $html .= '</div>' . "\n";
     $html .= '</div>' . "\n";
     $html .= '</div>' . "\n";
+    return $html;
+}
+
+function buildGoogleMapsLink( $address ) {
+    $html = '<a class="maps-link" target="_blank" href="https://maps.google.com/?q=' . urlencode($address) . '">';
+    $html .= $address;
+    $html .= '</a>';
     return $html;
 }
