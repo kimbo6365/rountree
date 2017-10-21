@@ -300,7 +300,11 @@ function html5wp_excerpt($length_callback = '', $more_callback = '')
 function html5_blank_view_article($more)
 {
     global $post;
-    return '&#8230; <div class="read-more-wrapper"><a class="view-article btn btn-default" href="' . get_permalink($post->ID) . '">' . __('Read More &raquo;', 'html5blank') . '</a></div>';
+    if ($post->type === 'post') {
+        return '&#8230; <div class="read-more-wrapper"><a class="view-article btn btn-default" href="' . get_permalink($post->ID) . '">' . __('Read More &raquo;', 'html5blank') . '</a></div>';
+    } else {
+        return '&#8230;';
+    }
 }
 
 // Remove Admin bar
@@ -501,6 +505,7 @@ function create_post_type_class()
         'public' => true,
         'has_archive' => true,
         'supports' => array(
+            'excerpt',
             'title',
             'editor',
             'custom-fields',
@@ -539,6 +544,7 @@ function create_post_type_show()
         'hierarchical' => true,
         'has_archive' => true,
         'supports' => array(
+            'excerpt',
             'title',
             'editor',
             'custom-fields',

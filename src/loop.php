@@ -1,5 +1,5 @@
-<?php // Exclude posts from Class-Series, Workshops, and Shows categories ?>
-<?php $query = new WP_Query( "cat=-2,-3,-4&paged=$paged" ); ?>
+<?php // Exclude posts from "Hidden from Blog category" ?>
+<?php $query = new WP_Query( "cat=-501&paged=$paged" ); ?>
 <?php if ($query->have_posts()): while ($query->have_posts()) : $query->the_post(); ?>
 	<div class="row">
 		<!-- article -->

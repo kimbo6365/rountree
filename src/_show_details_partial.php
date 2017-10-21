@@ -28,14 +28,15 @@
         echo '<table class="table show-grid"><thead><tr><th class="show-date-time">Date / Time</th><th>Location</th><th class="show-ticket-info">Tickets</th></tr></thead><tbody>';
         foreach ($children as $key => $post) {
           $location_name = get_post_meta($post->ID, 'location_name', true);
-          $location_address = get_post_meta($post->ID, 'location_address', true);  
+          $location_address = get_post_meta($post->ID, 'location_address', true); 
+          $detailed_directions_page = get_post_meta($post->ID, 'detailed_directions_page', true); 
           $date = get_post_meta($post->ID, 'date', true);
           $time = get_post_meta($post->ID, 'time', true);
           $online_cost = get_post_meta($post->ID, 'online_cost', true);
           $cost_at_door = get_post_meta($post->ID, 'cost_at_door', true);
           $ticket_link = get_post_meta($post->ID, 'ticket_link', true);
-          $cost_text = '';
           
+          $cost_text = '';
           if ($online_cost && $cost_at_door) {
             $cost_text = '$'.$online_cost . '&nbsp; online | $' . $cost_at_door . '&nbsp;at door';
           } else if ($online_cost) {
@@ -47,7 +48,11 @@
           echo '<tr>';
           echo '<td class="show-date-time">' . date('D, m/d', strtotime($date)) . ' at ' . $time . '</td>';
           if (!empty($location_name) && !empty($location_address)) {
-            echo '<td class="show-location">' . $location_name . '<br />' . buildGoogleMapsLink($location_address) . '</td>';
+            echo "<td class=\"show-location\">$location_name";
+            if ($detailed_directions_page) {
+              echo "<a class=\"btn btn-sm btn-default show-detailed-directions-link js-trigger-detailed-directions-modal\" data-detailed-directions-post-title=\"". get_the_title($detailed_directions_page). "\" data-detailed-directions-post-content=\"". esc_attr(get_post_field('post_content', $detailed_directions_page)) . "\">How to get there</a>";
+            }
+            echo '<br />' . buildGoogleMapsLink($location_address) . '</td>';
           }
           echo "<td class=\"show-ticket-info\">";
           if (!empty($ticket_link)) {
@@ -57,9 +62,9 @@
           }
           echo '</td></tr>';
         }
-        wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly        
         echo '</tbody></table>';
-      endif;
-    ?>
+        ?>
+      <?php wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly. ?>            
+      <?php endif; ?>
   </div>
 </div>

@@ -63,6 +63,13 @@
 			$modal.modal('show');
 		});
 
+		$('.js-trigger-detailed-directions-modal').on('click', function() {
+			const $modal = $('.js-detailed-directions-modal');
+			$modal.find('.modal-title').html(this.dataset.detailedDirectionsPostTitle);
+			$modal.find('.modal-body').html(this.dataset.detailedDirectionsPostContent);
+			$modal.modal('show');
+		});
+
 	// END ON LOAD
 	});
 } ( this, jQuery ));

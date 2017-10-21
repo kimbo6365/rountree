@@ -255,8 +255,8 @@ th {
 
 @font-face {
   font-family: 'Glyphicons Halflings';
-  src: url("../fonts/bootstrap/glyphicons-halflings-regular.eot");
-  src: url("../fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("../fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"), url("../fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"), url("../fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype"), url("../fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
+  src: url("fonts/bootstrap/glyphicons-halflings-regular.eot");
+  src: url("fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"), url("fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"), url("fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype"), url("fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
 
 .glyphicon {
   position: relative;
@@ -6246,7 +6246,7 @@ nav.nav {
           flex: 0 0 auto; }
       .single-class-post .info-block li > strong {
         text-align: right;
-        width: 100px; }
+        min-width: 100px; }
       .info-block li > strong:after {
         content: ':\00a0'; }
     .info-block li > span {
@@ -6483,6 +6483,10 @@ footer {
   color: #fff;
   font-size: 30px; }
 
+.modal-body {
+  text-align: left;
+}
+
 .alert {
   font-size: 16px;
   text-align: left; }
@@ -6525,6 +6529,10 @@ footer {
 
 .show-ticket-info {
   font-size: 16px; }
+
+.show-detailed-directions-link {
+  margin-left: 1em;
+}
 
 @media screen and (max-width: 480px) {
   .btn,
