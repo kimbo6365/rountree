@@ -14,6 +14,7 @@
       $prerequisites = get_post_meta(get_the_ID(), 'class_prerequisites', true);      
       $discount_end_date = get_post_meta(get_the_ID(), 'class_discount_end_date', true);
       $discount_amount = get_post_meta(get_the_ID(), 'class_discount_amount', true);
+      $discount_label = get_post_meta(get_the_ID(), 'class_discount_label', true);
       if ($discount_end_date) {
         // The date is stored in ms and the PHP date functions expect s, so multiply by 1000
         $discount_end_date = strtotime($discount_end_date);
@@ -25,7 +26,7 @@
         $original_cost = $cost;
         $cost -= $discount_amount;
         $displayCost = '<em>(<strike>$' . $original_cost . '</strike>)</em>&nbsp;<strong>$' . $cost . '*</strong>';
-        $cost_alert = '<div class="alert alert-warning"><strong>Early Bird Discount:</strong> Save $' . $discount_amount . ' if you sign up before ' . date('F j', $discount_end_date) . '</div>';
+        $cost_alert = "<div class=\"alert alert-warning\"><strong>$discount_label:</strong> Save $$discount_amount if you sign up before " . date('F j', $discount_end_date) . '</div>';
       } else {
         $displayCost = '$' . $cost;
       }
