@@ -38,11 +38,12 @@
         }
         if (!empty($dates)) echo '<li><strong>Dates</strong><span>' . $dates . '</span></li>';
         if (!empty($cost)) echo '<li><strong>Cost</strong><span>' . $displayCost . $cost_alert . '</span></li>';
-        // Only show the location & prerequisites fields on single page.
+        if (!empty($location_name) && !empty($location_address)) {
+          echo '<li><strong>Location</strong><span>' . $location_name . '&nbsp;&mdash;&nbsp;' . buildGoogleMapsLink($location_address) . '</span></li>';
+        }
+        // Only show the  prerequisites fields on single page.
         if (is_single()) {
-          if (!empty($location_name) && !empty($location_address)) {
-            echo '<li><strong>Location</strong><span>' . $location_name . '&nbsp;&mdash;&nbsp;' . buildGoogleMapsLink($location_address) . '</span></li>';
-          }
+          
           if (!empty($prerequisites)) echo '<li><strong>Prerequisites</strong><span>' . $prerequisites . '</span></li>';							
         }
         if (empty($cost)) echo '<a class="btn btn-default btn-lg btn-info js-request-class" data-requested-class="' . get_the_title() . '">Request this class</a>';
