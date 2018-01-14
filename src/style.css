@@ -255,8 +255,8 @@ th {
 
 @font-face {
   font-family: 'Glyphicons Halflings';
-  src: url("../fonts/bootstrap/glyphicons-halflings-regular.eot");
-  src: url("../fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("../fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"), url("../fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"), url("../fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype"), url("../fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
+  src: url("fonts/bootstrap/glyphicons-halflings-regular.eot");
+  src: url("fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("fonts/bootstrap/glyphicons-halflings-regular.woff2") format("woff2"), url("fonts/bootstrap/glyphicons-halflings-regular.woff") format("woff"), url("fonts/bootstrap/glyphicons-halflings-regular.ttf") format("truetype"), url("fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
 
 .glyphicon {
   position: relative;
@@ -6188,43 +6188,43 @@ nav.nav {
   text-align: left; }
 
 .media-tile {
-  margin-left: 0;
-  margin-right: 0; }
+  margin-left: -15px;
+  margin-right: -15px; }
   .media-tile:before, .media-tile:after {
     content: " ";
     display: table; }
   .media-tile:after {
     clear: both; }
-  .media-tile .class-image {
+  .media-tile .item-image {
     display: block;
     position: relative;
     min-height: 1px;
     padding-left: 15px;
     padding-right: 15px; }
     @media (min-width: 768px) {
-      .media-tile .class-image {
+      .media-tile .item-image {
         float: left;
         width: 25%; } }
     @media (min-width: 768px) {
-      .media-tile .class-image {
+      .media-tile .item-image {
         margin-left: 8.33333%; } }
-    .media-tile .class-image img {
+    .media-tile .item-image img {
       width: 100%;
       max-width: 100%;
       height: auto; }
-  .media-tile .class-details {
+  .media-tile .item-details {
     position: relative;
     min-height: 1px;
     padding-left: 15px;
     padding-right: 15px; }
     @media (min-width: 768px) {
-      .media-tile .class-details {
+      .media-tile .item-details {
         float: left;
         width: 58.33333%; } }
-    .media-tile .class-details > h1 {
+    .media-tile .item-details > h1 {
       margin-top: 0;
       text-align: left; }
-    .media-tile .class-details > p {
+    .media-tile .item-details > p {
       text-align: justify; }
   .media-tile .alert {
     margin: 5px 0 0; }
@@ -6246,7 +6246,7 @@ nav.nav {
           flex: 0 0 auto; }
       .single-class-post .info-block li > strong {
         text-align: right;
-        width: 100px; }
+        min-width: 100px; }
       .info-block li > strong:after {
         content: ':\00a0'; }
     .info-block li > span {
@@ -6315,20 +6315,26 @@ body {
   .show-description .show-details {
     margin-top: 30px; }
 
+.z-layout-item {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px; }
+
 @media (min-width: 768px) {
-  .class-listing:nth-child(even) .media-tile .class-image {
+  .z-layout-item:nth-of-type(even) .media-tile .item-image {
     left: 66.66667%; } }
 
 @media (min-width: 768px) {
-  .class-listing:nth-child(even) .media-tile .class-image {
+  .z-layout-item:nth-of-type(even) .media-tile .item-image {
     margin-left: 0%; } }
 
 @media (min-width: 768px) {
-  .class-listing:nth-child(even) .class-details {
+  .z-layout-item:nth-of-type(even) .item-details {
     right: 25%; } }
 
 @media (min-width: 768px) {
-  .class-listing:nth-child(even) .class-details {
+  .z-layout-item:nth-of-type(even) .item-details {
     margin-left: 8.33333%; } }
 
 .show-content {
@@ -6413,7 +6419,9 @@ footer {
 
 .promo-banner {
   position: relative;
-  margin-top: 50px; }
+  margin-top: 50px;
+  height: 400px;
+  background-position-x: center; }
   .promo-banner img {
     width: 100%;
     height: auto; }
@@ -6475,9 +6483,23 @@ footer {
   color: #fff;
   font-size: 30px; }
 
+.modal-body {
+  text-align: left;
+}
+
 .alert {
   font-size: 16px;
   text-align: left; }
+
+.showtime-container {
+  margin-left: -15px;
+  margin-right: -15px;
+  margin-top: 30px; }
+  .showtime-container:before, .showtime-container:after {
+    content: " ";
+    display: table; }
+  .showtime-container:after {
+    clear: both; }
 
 .showtime-listing {
   position: relative;
@@ -6504,6 +6526,17 @@ footer {
     width: 200px; }
   .show-grid .maps-link {
     color: #337ab7; }
+
+.show-ticket-info {
+  font-size: 16px; }
+
+.show-detailed-directions-link {
+  margin-left: 1em;
+}
+
+footer .btn {
+  margin-bottom: 30px;
+}
 
 @media screen and (max-width: 480px) {
   .btn,
