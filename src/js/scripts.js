@@ -70,6 +70,11 @@
 			$modal.modal('show');
 		});
 
+		$('.js-trigger-email-newsletter-modal').on('click', function() {
+			const $modal = $('.js-email-newsletter-modal');
+			$modal.modal('show');
+		});
+
 	// END ON LOAD
 	});
 } ( this, jQuery ));

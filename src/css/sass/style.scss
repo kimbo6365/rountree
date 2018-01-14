@@ -300,5 +300,9 @@ footer {
   }
 }
 
+footer .btn {
+  margin-bottom: 30px;
+}
+
 // This always goes last!
 @import "responsive";

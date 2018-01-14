@@ -6571,6 +6571,9 @@ footer {
   .show-grid .maps-link {
     color: #337ab7; }
 
+footer .btn {
+  margin-bottom: 30px; }
+
 @media screen and (max-width: 480px) {
   .btn,
   .rountree .stripe-button-el {
