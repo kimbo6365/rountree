@@ -1,7 +1,7 @@
 <?php get_header(); ?>
 
 	<main role="main" aria-label="Content">
-	<section class="container-fluid">
+	<section class="container">
 		<div class="row">
 	<?php if (have_posts()): while (have_posts()) : the_post(); ?>
 			<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>

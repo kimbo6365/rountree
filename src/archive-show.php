@@ -6,7 +6,7 @@
 ?>
 <?php /* Template Name: Shows */ get_header(); ?>
 <main role="main" aria-label="Content">
-		<section class="container-fluid">
+		<section class="container">
 			<?php wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly ?>
 			<?php endwhile; ?>
 		<?php endif; ?>	

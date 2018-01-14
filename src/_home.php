@@ -1,7 +1,7 @@
 <?php /* Template Name: Home */ get_header(); ?>
 	<main role="main" aria-label="Content">
 		<!-- section -->
-		<section class="container-fluid home-page">
+		<section class="container home-page">
 			<?php if (have_posts()): while (have_posts()) : the_post(); ?>
 
 				<!-- article -->

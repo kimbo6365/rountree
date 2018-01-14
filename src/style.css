@@ -6188,8 +6188,8 @@ nav.nav {
   text-align: left; }
 
 .media-tile {
-  margin-left: -15px;
-  margin-right: -15px; }
+  margin-left: 0;
+  margin-right: 0; }
   .media-tile:before, .media-tile:after {
     content: " ";
     display: table; }
@@ -6504,9 +6504,6 @@ footer {
     width: 200px; }
   .show-grid .maps-link {
     color: #337ab7; }
-
-footer .btn {
-  margin-bottom: 30px; }
 
 @media screen and (max-width: 480px) {
   .btn,

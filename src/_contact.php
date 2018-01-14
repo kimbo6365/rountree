@@ -2,7 +2,7 @@
 
 	<main role="main" aria-label="Content">
 		<!-- section -->
-		<section class="container-fluid contact-page">
+		<section class="container contact-page">
 			<div class="row">
 		<?php if (have_posts()): while (have_posts()) : the_post(); ?>
 		<h1 class="col-sm-10 col-sm-offset-1 page-title"><?php the_title(); ?></h1>

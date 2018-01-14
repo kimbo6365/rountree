@@ -6,7 +6,7 @@
 ?>
 <?php /* Template Name: Shows */ get_header(); ?>
 	<main role="main" aria-label="Content">
-		<section class="container-fluid">
+		<section class="container">
 			<div class="row">
 				<!-- <div class="filter-toolbar col-sm-11 text-right">
 					<span>Filter by:&nbsp;</span>

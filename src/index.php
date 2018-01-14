@@ -2,7 +2,7 @@
 
 	<main role="main" aria-label="Content">
 		<!-- section -->
-		<section class="container-fluid">
+		<section class="container">
 
 			<h1 class="page-title col-sm-10 col-sm-offset-1"><?php _e( 'Latest Posts', 'html5blank' ); ?></h1>
 

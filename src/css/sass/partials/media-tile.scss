@@ -1,6 +1,6 @@
 
 .media-tile {
-	@include make-row();
+	@include make-row(0);
 
 	.class-image {
     display: block;
