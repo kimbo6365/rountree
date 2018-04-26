@@ -49,7 +49,7 @@
           echo '<td class="show-date-time">' . date('D, m/d', strtotime($date)) . ' at ' . $time . '</td>';
           if (!empty($location_name) && !empty($location_address)) {
             echo "<td class=\"show-location\">$location_name";
-            if ($detailed_directions_page) {
+            if ($detailed_directions_page && !empty(get_the_title($detailed_directions_page))) {
               echo "<a class=\"btn btn-sm btn-default show-detailed-directions-link js-trigger-detailed-directions-modal\" data-detailed-directions-post-title=\"". get_the_title($detailed_directions_page). "\" data-detailed-directions-post-content=\"". esc_attr(get_post_field('post_content', $detailed_directions_page)) . "\">How to get there</a>";
             }
             echo '<br />' . buildGoogleMapsLink($location_address) . '</td>';
