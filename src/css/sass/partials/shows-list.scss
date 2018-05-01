@@ -1,0 +1,53 @@
+.show-description {
+  margin-top: 30px;
+  @include make-sm-column-offset(1);
+  @include make-sm-column(10);
+
+  .show-details {
+    margin-top: 30px;
+  }
+}
+
+.show-content {
+  margin-bottom: 50px;
+}
+
+.showtime-container {
+  @include make-row();
+  margin-top: 30px;
+}
+
+.showtime-listing {
+  @include make-sm-column(10);
+  @include make-sm-column-offset(1);
+}
+
+.show-grid {
+  width: 100%;
+  table-layout: fixed;
+  text-align: left;
+
+  thead {
+    .show-date-time {
+      width: 200px;
+    }
+    .show-location {
+      width: 100%;
+    }
+    .show-ticket-info {
+      width: 200px;
+    }
+  }
+
+  .maps-link {
+    color: $link-color;
+  }
+}
+
+.show-ticket-info {
+  font-size: 16px;
+}
+
+.show-detailed-directions-link {
+  margin-right: 1em;
+}

@@ -1,0 +1,21 @@
+.blog-excerpt {
+  &:before {
+    content: "\201C";
+    font-family: 'Spirax';
+    font-size: 148px;
+    position: absolute;
+    line-height: 1;
+    color: #bbb;
+  }
+
+  > p {
+    padding-left: 4.5em;
+  }
+
+  .view-article {
+    @extend .btn-default;
+  }
+  .read-more-wrapper {
+    @include make-sm-column-offset(1);
+  }
+}

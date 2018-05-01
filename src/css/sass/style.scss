@@ -24,6 +24,11 @@
 @import "partials/gallery";
 @import "partials/media-tile";
 @import "partials/info-block";
+@import "partials/z-layout";
+@import "partials/blog";
+@import "partials/modal";
+@import "partials/promo-banner";
+@import "partials/shows-list";
 @import "partials/ninja-forms-override";
 
 h1, h2, h3, h4, h5, h6,
@@ -42,6 +47,10 @@ body {
 	text-align: justify;
 }
 
+section.container {
+  width: 100%;
+}
+
 .filter-toolbar {
 	margin-bottom: 30px;
 }
@@ -49,33 +58,6 @@ body {
 .circle {
 	border-radius: 50%;
 }
-
-.show-description {
-  margin-top: 30px;
-  @include make-sm-column-offset(1);
-  @include make-sm-column(10);
-
-  .show-details {
-    margin-top: 30px;
-  }
-}
-
-// Z-layout
-.class-listing:nth-child(even) {
-	.media-tile .class-image {
-		@include make-sm-column-push(8);
-		@include make-sm-column-offset(0);
-	}
- 	.class-details {
-		@include make-sm-column-pull(3);
-		@include make-sm-column-offset(1);
-	}
-}
-
-.show-content {
-  margin-bottom: 50px;
-}
-
 
 .single-class-post {
   margin-top: 30px;
@@ -88,28 +70,6 @@ body {
 .post-meta-information {
   font-family: 'Zilla Slab';
   color: #999;
-}
-
-.blog-excerpt {
-  &:before {
-    content: "\201C";
-    font-family: 'Spirax';
-    font-size: 148px;
-    position: absolute;
-    line-height: 1;
-    color: #bbb;
-  }
-
-  > p {
-    padding-left: 4.5em;
-  }
-
-  .view-article {
-    @extend .btn-default;
-  }
-  .read-more-wrapper {
-    @include make-sm-column-offset(1);
-  }
 }
 
 .banner-image-container {
@@ -154,54 +114,6 @@ body {
 		font-size: 36px;
 		margin: 0;
 	}
-}
-
-footer {
-  font-family: 'Zilla Slab';
-	background: darken($brand-primary, 20%);
-	color: #fff;
-	text-align: center;
-	padding: 100px 0;
-  margin-top: 150px;
-
-  &.no-margin {
-    margin-top: 0;
-  }
-
-	a {
-		color: #fff;
-		text-decoration: underline;
-
-		&:hover {
-			color: #fff;
-		}
-	}
-}
-
-.promo-banner {
-  position: relative;
-  margin-top: 50px;
-
-	img {
-		width: 100%;
-		height: auto;
-	}
-
-  .promo-overlay {
-    @include gradient-vertical(transparent, rgba(0,0,0,0.75), 30%, 50%);
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    text-align: center;
-    padding: 30px;
-
-    h2 {
-      font-size: 72px;
-      text-shadow: 3px 3px 4px rgba(0,0,0,.9);
-      color: #fff;
-    }
-  }
 }
 
 .rountree .stripe-button-el {
@@ -251,53 +163,9 @@ footer {
   @extend .btn-primary;
 }
 
-.modal-header {
-  background: $brand-primary;
-  border-radius: 4px 4px 0 0;
-
-  > button {
-    color: #fff;
-    &:hover {
-      color: #fff;
-    }
-  }
-}
-
-.modal-title {
-  color: #fff;
-  font-size: 30px;
-}
-
 .alert {
   font-size: 16px;
   text-align: left;
-}
-
-.showtime-listing {
-  @include make-sm-column(10);
-  @include make-sm-column-offset(1);
-}
-
-.show-grid {
-  width: 100%;
-  table-layout: fixed;
-  text-align: left;
-
-  thead {
-    .show-date-time {
-      width: 200px;
-    }
-    .show-location {
-      width: 100%;
-    }
-    .show-ticket-info {
-      width: 200px;
-    }
-  }
-
-  .maps-link {
-    color: $link-color;
-  }
 }
 
 // This always goes last!

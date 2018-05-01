@@ -4,4 +4,28 @@
  */
 
 
-.footer {}
+ footer {
+  font-family: 'Zilla Slab';
+	background: darken($brand-primary, 20%);
+	color: #fff;
+	text-align: center;
+	padding: 100px 0;
+  margin-top: 150px;
+
+  &.no-margin {
+    margin-top: 0;
+  }
+
+	a {
+		color: #fff;
+		text-decoration: underline;
+
+		&:hover {
+			color: #fff;
+		}
+  }
+
+  .btn {
+    margin-bottom: 30px;
+  }
+}

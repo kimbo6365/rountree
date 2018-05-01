@@ -1,0 +1,13 @@
+.z-layout-item {
+  @include make-sm-column(12);
+}
+.z-layout-item:nth-child(even) {
+	.media-tile .item-image {
+		@include make-sm-column-push(8);
+		@include make-sm-column-offset(0);
+	}
+ 	.item-details {
+		@include make-sm-column-pull(3);
+		@include make-sm-column-offset(1);
+	}
+}

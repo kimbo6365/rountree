@@ -1,0 +1,27 @@
+.promo-banner {
+  position: relative;
+  margin-top: 50px;
+  height: 400px;
+  background-position-x: center;
+
+	img {
+		width: 100%;
+		height: auto;
+	}
+
+  .promo-overlay {
+    @include gradient-vertical(transparent, rgba(0,0,0,0.75), 30%, 50%);
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    padding: 30px;
+
+    h2 {
+      font-size: 72px;
+      text-shadow: 3px 3px 4px rgba(0,0,0,.9);
+      color: #fff;
+    }
+  }
+}

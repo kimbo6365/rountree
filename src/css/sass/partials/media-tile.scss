@@ -1,8 +1,8 @@
 
 .media-tile {
-	@include make-row(0);
+	@include make-row();
 
-	.class-image {
+	.item-image {
     display: block;
 		@include make-sm-column(3);
     @include make-sm-column-offset(1);
@@ -13,7 +13,7 @@
       height: auto;
     }
 	}
- 	.class-details {
+ 	.item-details {
 		@include make-sm-column(7);
 
 		> h1 {

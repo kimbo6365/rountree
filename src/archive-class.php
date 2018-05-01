@@ -52,11 +52,11 @@
 								</li>
 							</ul>
 							<?php wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly ?>
+						<?php endif; ?>
+						<?php if (($wp_query->current_post +1) < ($wp_query->post_count)): ?>
+							<div class="entry-spacer"></div>
 						<?php endif; ?>			
 					</article>
-					<?php if (($wp_query->current_post +1) < ($wp_query->post_count)): ?>
-						<div class="entry-spacer"></div>
-					<?php endif; ?>
 					<?php wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly ?>
 				<?php endwhile; ?>
 			<?php endif; ?>
