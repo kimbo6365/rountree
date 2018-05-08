@@ -499,7 +499,7 @@ function custom_stripe_payment_log_column($column, $post_id) {
         case 'name' :
             echo get_post_meta( $post_id , 'name' , true ); 
             break;
-        case 'quantity num' :
+        case 'quantity' :
             echo get_post_meta( $post_id , 'quantity' , true ); 
             break;
         case 'customer_id' :
@@ -769,7 +769,7 @@ function create_post_type_stripe_payment_log() {
         'has_archive'         => false,
         'show_in_rest'        => true,
         'menu_icon' => 'dashicons-store',
-        'menu_position' => 20
+        'menu_position' => 100
     ));
 }
 
