@@ -463,6 +463,7 @@ function rountree_stripe_payment_submit() {
        require_once(get_template_directory() . '/modules/stripe-php/init.php');
     }
     \Stripe\Stripe::setApiKey($apiLiveKey);
+    // \Stripe\Stripe::setApiKey($apiTestKey);
     try {
         // Create Stripe Customer
         $customer = \Stripe\Customer::create([

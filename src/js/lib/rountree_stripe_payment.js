@@ -6,6 +6,7 @@
 		.done(function() {
 			/* jshint ignore:start */
 			var stripe = Stripe(stripePaymentSettings.liveApiKey);
+			// var stripe = Stripe(stripePaymentSettings.testApiKey);
 			var elements = stripe.elements({
 				fonts: [
 					{
