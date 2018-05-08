@@ -458,7 +458,8 @@ function rountree_stripe_payment_submit() {
     if( ! class_exists( 'Stripe\Stripe' ) ) {
        require_once(get_template_directory() . '/modules/stripe-php/init.php');
     }
-    \Stripe\Stripe::setApiKey("sk_test_FppaXGWbaeCHznvoDgMFhQCm");
+    // \Stripe\Stripe::setApiKey("sk_test_FppaXGWbaeCHznvoDgMFhQCm");
+    \Stripe\Stripe::setApiKey("sk_live_Hujw8i6RSHsM3IkNYKgdYY0R");
     try {
         // Create Stripe Customer
         $customer = \Stripe\Customer::create([
