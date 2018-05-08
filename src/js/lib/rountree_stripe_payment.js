@@ -136,8 +136,7 @@
 				$('#js-stripe-payment-form-spinner').hide();
 				return;
 			}
-			const { amount, description, metadata: { first_name, quantity }, receipt_email, source: { last4 } } = response.data;
-			const [ itemType, itemName ] = description.split('::');
+			const { amount, description, metadata: { first_name, quantity, item_name, item_type }, receipt_email, source: { last4 } } = response.data;
 			const totalCost = `$${(amount / 100).toFixed(2)}`;
 			$('#js-payment-modal-header').text('Purchase complete!');
 			$('#js-payment-success-first-name').text(first_name);

@@ -611,7 +611,7 @@ function rountree_stripe_payment_submit() {
                 'show' => $data['itemType'] == "show" ? $data['itemName'] : '',
             ],
         ]);
-        $chargeDescription = $data['itemType'] . '::' . $data['itemName'];
+        $chargeDescription = $data['itemName'];
         //Create Charge
         $charge = \Stripe\Charge::create([
             'customer' => $customer->id,
@@ -623,7 +623,9 @@ function rountree_stripe_payment_submit() {
                 'first_name' => $data['firstName'],
                 'last_name' => $data['lastName'],
                 'is_subscribed' => $data['emailSignUp'],
-                'quantity' => $data['itemQuantity']
+                'quantity' => $data['itemQuantity'],
+                'item_name' => $data['itemName'],
+                'item_type' => $data['itemType']
             ],
         ]);
         // Track the people who have purchased tickets and the quantity in a custom field on the post
