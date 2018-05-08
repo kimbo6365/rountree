@@ -132,7 +132,9 @@ function html5blank_header_scripts()
         wp_localize_script('rountree_stripe_payment', 'stripePaymentSettings', array(
             'name' => get_bloginfo('name'),
             'rountree-stripe-nonce' => wp_create_nonce('rountree-stripe-nonce'),
-            'ajaxUrl' => admin_url( 'admin-ajax.php' )
+            'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+            'testApiKey' => get_option('stripe_test_public_key'),
+            'liveApiKey' => get_option('stripe_live_public_key')
         ));
     }
 }
@@ -454,12 +456,13 @@ add_action('wp_ajax_rountree_stripe_payment_submit', 'rountree_stripe_payment_su
 
 function rountree_stripe_payment_submit() {
     $data = $_POST;
+    $apiTestKey = get_option('stripe_test_secret_key');
+    $apiLiveKey = get_option('stripe_live_secret_key');
 
     if( ! class_exists( 'Stripe\Stripe' ) ) {
        require_once(get_template_directory() . '/modules/stripe-php/init.php');
     }
-    // \Stripe\Stripe::setApiKey("sk_test_FppaXGWbaeCHznvoDgMFhQCm");
-    \Stripe\Stripe::setApiKey("sk_live_Hujw8i6RSHsM3IkNYKgdYY0R");
+    \Stripe\Stripe::setApiKey($apiLiveKey);
     try {
         // Create Stripe Customer
         $customer = \Stripe\Customer::create([

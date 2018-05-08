@@ -5,8 +5,7 @@
 		$.getScript('https://js.stripe.com/v3/')
 		.done(function() {
 			/* jshint ignore:start */
-			// var stripe = Stripe('pk_test_bNnVDG3AlxIpVGnVzNL72JvK');
-			var stripe = Stripe('pk_live_USXQpXIWz4Qqf2QpD3BxqXrP');
+			var stripe = Stripe(stripePaymentSettings.liveApiKey);
 			var elements = stripe.elements({
 				fonts: [
 					{
