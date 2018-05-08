@@ -5833,6 +5833,30 @@ button.close {
   font-style: normal;
 }
 */
+.spinner-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.5); }
+  .spinner-container .spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); }
+  .spinner-container i {
+    margin: 0;
+    color: #999;
+    font-size: 100px;
+    animation: spin 1.75s linear infinite; }
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg); }
+  to {
+    transform: rotate(360deg); } }
+
 /**
  * partials/reset
  * ---
@@ -6334,7 +6358,8 @@ footer {
 
 .modal-header {
   background: #337ab7;
-  border-radius: 4px 4px 0 0; }
+  border-radius: 4px 4px 0 0;
+  text-justify: left; }
   .modal-header > button {
     color: #fff; }
     .modal-header > button:hover {
@@ -6342,7 +6367,7 @@ footer {
 
 .modal-title {
   color: #fff;
-  font-size: 30px; }
+  font-size: 24px; }
 
 .promo-banner {
   position: relative;

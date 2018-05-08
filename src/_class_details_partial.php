@@ -33,9 +33,9 @@
     ?>
     <ul class="info-block">
       <?php 
-        if (!empty($cost)) {
-          echo do_shortcode("[stripe verify_zip=\"true\" billing=\"true\" amount=\"" . $cost . "00\" description=\"" . get_the_title() . "\"]");
-        }
+      if (!empty($cost)) {
+        echo '<a class="btn btn-primary btn-lg js-checkout-btn" data-item-name="'. get_the_title() .'" data-item-cost="'. $cost .'" data-item-type="class" data-item-id="'. get_the_ID() .'">Sign Up Now!</a>';
+      }
         if (!empty($dates)) echo '<li><strong>Dates</strong><span>' . $dates . '</span></li>';
         if (!empty($cost)) echo '<li><strong>Cost</strong><span>' . $displayCost . $cost_alert . '</span></li>';
         if (!empty($location_name) && !empty($location_address)) {
@@ -46,7 +46,9 @@
           
           if (!empty($prerequisites)) echo '<li><strong>Prerequisites</strong><span>' . $prerequisites . '</span></li>';							
         }
-        if (empty($cost)) echo '<a class="btn btn-default btn-lg btn-info js-request-class" data-requested-class="' . get_the_title() . '">Request this class</a>';
+        if (empty($cost)) {
+          echo '<a class="btn btn-default btn-lg btn-info js-request-class" data-requested-class="' . get_the_title() . '">Request this class</a>';
+        }
       ?>
     </ul>
   </div>

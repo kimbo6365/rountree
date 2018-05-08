@@ -34,19 +34,11 @@
           $time = get_post_meta($post->ID, 'time', true);
           $online_cost = get_post_meta($post->ID, 'online_cost', true);
           $cost_at_door = get_post_meta($post->ID, 'cost_at_door', true);
-          $ticket_link = get_post_meta($post->ID, 'ticket_link', true);
-          
-          $cost_text = '';
-          if ($online_cost && $cost_at_door) {
-            $cost_text = '$'.$online_cost . '&nbsp; online | $' . $cost_at_door . '&nbsp;at door';
-          } else if ($online_cost) {
-            $cost_text = "\$$online_cost";
-          } else if ($cost_at_door) {
-            $cost_text = "\$$cost_at_door";
-          }
+
+          $showtime = date('D, m/d', strtotime($date)) . ' at ' . $time;
           
           echo '<tr>';
-          echo '<td class="show-date-time">' . date('D, m/d', strtotime($date)) . ' at ' . $time . '</td>';
+          echo '<td class="show-date-time">' . $showtime . '</td>';
           if (!empty($location_name) && !empty($location_address)) {
             echo "<td class=\"show-location\">$location_name";
             if ($detailed_directions_page && !empty(get_the_title($detailed_directions_page))) {
@@ -55,10 +47,11 @@
             echo '<br />' . buildGoogleMapsLink($location_address) . '</td>';
           }
           echo "<td class=\"show-ticket-info\">";
-          if (!empty($ticket_link)) {
-            echo '<p>' . $cost_text . '</p><a class="btn btn-primary" target="_blank" href="' . $ticket_link . '">Buy tickets now!</a>';
-          } else if (!empty($cost_text)) {
-            echo "<p>$cost_text</p>";
+          // If there is a value for online cost, and the current time is not past 12:00 Eastern Time on the day of the show, show the purchase link
+          if (!empty($online_cost) && strtotime('now') <= strtotime($date." America/New_York")) {
+            echo '<a class="btn btn-primary js-checkout-btn" data-item-name="'. get_the_title() .'" data-item-cost="'. $online_cost .'" data-item-type="show" data-item-date="'. $showtime .'" data-item-id="'. get_the_ID() .'">Buy tickets!</a>';
+          } else if (!empty($cost_at_door)) {
+            echo "<p>\$$cost_at_door at door</p>";
           }
           echo '</td></tr>';
         }

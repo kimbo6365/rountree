@@ -5,9 +5,7 @@
  * Custom functions, support, custom post types and more.
  */
 
-require_once "modules/is-debug.php";
-
-/*------------------------------------*\
+require_once "modules/is-debug.php";/*------------------------------------*\
     External Modules/Files
 \*------------------------------------*/
 
@@ -129,6 +127,13 @@ function html5blank_header_scripts()
             // Enqueue Scripts
             wp_enqueue_script('html5blankscripts-min');
         }
+
+        wp_enqueue_script( 'rountree_stripe_payment', get_template_directory_uri() . '/js/lib/rountree_stripe_payment.js', array( 'jquery' ), null, true );
+        wp_localize_script('rountree_stripe_payment', 'stripePaymentSettings', array(
+            'name' => get_bloginfo('name'),
+            'rountree-stripe-nonce' => wp_create_nonce('rountree-stripe-nonce'),
+            'ajaxUrl' => admin_url( 'admin-ajax.php' )
+        ));
     }
 }
 
@@ -444,6 +449,58 @@ add_shortcode('rountree_button', 'rountree_button');
 // Shortcodes above would be nested like this -
 // [html5_shortcode_demo] [html5_shortcode_demo_2] Here's the page title! [/html5_shortcode_demo_2] [/html5_shortcode_demo]
 
+add_action('wp_ajax_nopriv_rountree_stripe_payment_submit', 'rountree_stripe_payment_submit');
+add_action('wp_ajax_rountree_stripe_payment_submit', 'rountree_stripe_payment_submit');
+
+function rountree_stripe_payment_submit() {
+    $data = $_POST;
+
+    if( ! class_exists( 'Stripe\Stripe' ) ) {
+       require_once(get_template_directory() . '/modules/stripe-php/init.php');
+    }
+    \Stripe\Stripe::setApiKey("sk_test_FppaXGWbaeCHznvoDgMFhQCm");
+    try {
+        // Create Stripe Customer
+        $customer = \Stripe\Customer::create([
+            'email' => $data['emailAddress'],
+            'source' => $data['token'],
+            'metadata' => [
+                'first_name' => $data['firstName'],
+                'last_name' => $data['lastName'],
+                'is_subscribed' => $data['emailSignUp'],
+                'class' => $data['itemType'] == "class" ? $data['itemName'] : '',
+                'show' => $data['itemType'] == "show" ? $data['itemName'] : '',
+            ],
+        ]);
+        $chargeDescription = $data['itemType'] . '::' . $data['itemName'];
+        //Create Charge
+        $charge = \Stripe\Charge::create([
+            'customer' => $customer->id,
+            'amount' => $data['amount'],
+            'currency' => 'usd',
+            'description' => $chargeDescription,
+            'statement_descriptor' => 'Amanda Rountree',
+            'metadata' => [
+                'first_name' => $data['firstName'],
+                'last_name' => $data['lastName'],
+                'is_subscribed' => $data['emailSignUp'],
+                'is_subscribed' => $data['emailSignUp'],
+                'quantity' => $data['itemQuantity']
+            ],
+        ]);
+        // Track the people who have purchased tickets and the quantity in a custom field on the post
+        $purchase_info = get_post_meta($data['postId'], 'purchases')[0];
+        $purchase_info .= "\n" . $data['firstName'] . " " . $data['lastName'] . " (" . $data['itemQuantity'] . ")";
+        update_post_meta($data['postId'], 'purchases', $purchase_info);
+        wp_send_json_success($charge);
+    } catch (Exception $e) {
+        $headers =  array('Content-Type: text/html; charset=UTF-8');
+        $email_content = array($data, $customer, $charge, $e);
+        // Send an email for tracking errors
+        wp_mail( 'kimbo6365@gmail.com', 'AmandaRountree.com: Error processing payment' , $email_content, $headers );
+        wp_send_json($e->getMessage());
+    }
+}
 /*------------------------------------*\
     Custom Post Types
 \*------------------------------------*/

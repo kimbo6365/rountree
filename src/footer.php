@@ -101,12 +101,13 @@
 						</div>
 					</div>
 				</div>
-			</div>			
-			
+			</div>
+			<?php get_template_part('_payment_form'); ?>
+    </div>
 		<!-- /wrapper -->
 
 		<?php wp_footer(); ?>
-
+		
 		<!-- analytics -->
 		<script>
 		(function(f,i,r,e,s,h,l){i['GoogleAnalyticsObject']=s;f[s]=f[s]||function(){

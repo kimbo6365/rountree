@@ -5,6 +5,7 @@
 .modal-header {
   background: $brand-primary;
   border-radius: 4px 4px 0 0;
+  text-justify: left;
 
   > button {
     color: #fff;
@@ -16,5 +17,5 @@
 
 .modal-title {
   color: #fff;
-  font-size: 30px;
+  font-size: 24px;
 }

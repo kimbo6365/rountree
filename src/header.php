@@ -13,6 +13,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="description" content="<?php bloginfo('description'); ?>">
 		<link href="https://fonts.googleapis.com/css?family=Cabin|Cairo|Montserrat|Muli|Noto+Sans|Nunito|Open+Sans|Oxygen|Poppins|Poppins:700|Raleway|Roboto|Source+Sans+Pro|Ubuntu|Varela+Round|Zilla+Slab|Spirax|Lato|Lato:700" rel="stylesheet">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
 
 		<?php wp_head(); ?>
 		<script>
