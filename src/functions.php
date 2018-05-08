@@ -453,6 +453,140 @@ add_shortcode('rountree_button', 'rountree_button');
 
 add_action('wp_ajax_nopriv_rountree_stripe_payment_submit', 'rountree_stripe_payment_submit');
 add_action('wp_ajax_rountree_stripe_payment_submit', 'rountree_stripe_payment_submit');
+add_action('init', 'create_post_type_stripe_payment_log'); // Add our Stripe Payment Log post type
+
+// Add new column to shows & classes grids to show total sales
+function set_custom_edit_class_show_columns($columns) {
+    unset( $columns['date'] );
+    $columns['sales'] = 'Sales';
+    $columns['date'] = 'Date';
+
+    return $columns;
+}
+
+function custom_class_show_column($column, $post_id) {
+    switch ( $column ) {
+        case 'sales' :
+            $sales = 0;
+            $stripe_payment_query = new WP_Query( array( 'post_type' => 'stripe_payment_log', 'meta_key' => 'linked_post_id', 'meta_value' => $post_id ) );
+            if ($stripe_payment_query->have_posts()): while ($stripe_payment_query->have_posts()) : $stripe_payment_query->the_post();
+                $sales += get_post_meta(get_the_ID(), 'quantity', true);
+            endwhile;
+            endif;
+            wp_reset_postdata();
+            echo $sales; 
+            break;
+    }
+}
+
+function set_custom_edit_stripe_payment_log_columns($columns) {
+    unset( $columns['title'] );
+    unset( $columns['date'] );
+    $columns['name'] = 'Name';
+    $columns['quantity'] = 'Quantity';
+    $columns['customer_id'] = 'Customer ID';
+    $columns['charge_id'] = 'Charge ID';
+    $columns['amount'] = 'Amount';
+    $columns['is_subscribed'] = 'Is Subscribed';
+    $columns['linked_post_id'] = 'Item Purchased';
+    $columns['date'] = 'Date';
+
+    return $columns;
+}
+
+function custom_stripe_payment_log_column($column, $post_id) {
+    switch ( $column ) {
+        case 'name' :
+            echo get_post_meta( $post_id , 'name' , true ); 
+            break;
+        case 'quantity num' :
+            echo get_post_meta( $post_id , 'quantity' , true ); 
+            break;
+        case 'customer_id' :
+            echo get_post_meta( $post_id , 'customer_id' , true ); 
+            break;
+        case 'charge_id' :
+            echo get_post_meta( $post_id , 'charge_id' , true ); 
+            break;
+        case 'amount' :
+            $amount = get_post_meta( $post_id , 'amount' , true ); 
+            echo money_format('%i', $amount / 100);
+            break;
+        case 'is_subscribed' :
+            echo get_post_meta( $post_id , 'is_subscribed' , true ); 
+            break;
+        case 'linked_post_id' :
+            $linked_post_id = get_post_meta( $post_id , 'linked_post_id' , true );
+            echo get_the_title($linked_post_id); 
+            break;
+
+    }
+}
+add_filter( 'manage_edit-stripe_payment_log_sortable_columns', 'sortable_stripe_payment_log_column' );
+function sortable_stripe_payment_log_column( $columns ) {
+    $columns['linked_post_id'] = 'Item Purchased';
+    $columns['name'] = 'Name'; 
+    return $columns;
+}
+
+add_action('add_meta_boxes', 'rountree_add_stripe_payment_log_meta_box');
+// Add post meta box to show payment info for shows and classes
+function rountree_add_stripe_payment_log_meta_box()
+{
+    $screens = ['show', 'class'];
+    foreach ($screens as $screen) {
+        add_meta_box(
+            'rountree_stripe_payment_log_box', // Unique ID
+            'Stripe Payments',  // Box title
+            'rountree_stripe_payment_log_html',  // Content callback, must be of type callable
+            $screen // Post type
+        );
+    }
+}
+function rountree_stripe_payment_log_html($post)
+{
+    ?>
+    <table class="wp-list-table widefat fixed striped posts">
+        <thead>
+            <tr>
+                <th class="manage-column column-title column-primary">
+                    Name
+                </th>
+                <th class="manage-column num column-comments">
+                    Quantity
+                </th>
+                <th class="manage-column">
+                    Amount Charged
+                </th>
+                <th class="manage-column">
+                    Charge ID
+                </th>
+                <th class="manage-column">
+                    Purchase Date
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $html = '';
+            $stripe_payment_query = new WP_Query( array( 'post_type' => 'stripe_payment_log', 'meta_key' => 'linked_post_id', 'meta_value' => $post->ID ) );
+            if ($stripe_payment_query->have_posts()): while ($stripe_payment_query->have_posts()) : $stripe_payment_query->the_post();
+            $html .= '<tr>';
+                $html .= '<td>' . get_post_meta(get_the_ID(), 'name', true) . '</td>';
+                $html .= '<td>' . get_post_meta(get_the_ID(), 'quantity', true) . '</td>';
+                $html .= '<td>' . money_format('%i', (get_post_meta(get_the_ID(), 'amount', true) / 100)) . '</td>';
+                $html .= '<td>' . get_post_meta(get_the_ID(), 'charge_id', true) . '</td>';
+                $html .= '<td>' . get_the_date() . '</td>';
+                $html .= '</tr>';
+                echo $html;
+            endwhile;
+            endif;
+            wp_reset_postdata();
+            ?>
+        </tbody>
+    </table>
+    <?php
+}
 
 function rountree_stripe_payment_submit() {
     $data = $_POST;
@@ -489,14 +623,30 @@ function rountree_stripe_payment_submit() {
                 'first_name' => $data['firstName'],
                 'last_name' => $data['lastName'],
                 'is_subscribed' => $data['emailSignUp'],
-                'is_subscribed' => $data['emailSignUp'],
                 'quantity' => $data['itemQuantity']
             ],
         ]);
         // Track the people who have purchased tickets and the quantity in a custom field on the post
         $purchase_info = get_post_meta($data['postId'], 'purchases')[0];
         $purchase_info .= "\n" . $data['firstName'] . " " . $data['lastName'] . " (" . $data['itemQuantity'] . ")";
-        update_post_meta($data['postId'], 'purchases', $purchase_info);
+        // Log stripe payment
+        wp_insert_post(
+            array(
+                'post_title' 	=>  $token,
+                'post_status' 	=>  'publish',
+                'post_type' 	=>  'stripe_payment_log',
+	            'meta_input'   => array(
+                    'name' => $data['firstName'] . ' ' . $data['lastName'],
+                    'quantity' => $data['itemQuantity'],
+		            'customer_id' => $customer->id,
+					'charge_id' => $charge->id,
+	                'amount' => $data['amount'],
+                    'is_subscribed' => $data['emailSignUp'],
+                    'linked_post_id' => $data['postId']
+	            ),
+            )
+        );
+
         wp_send_json_success($charge);
     } catch (Exception $e) {
         $headers =  array('Content-Type: text/html; charset=UTF-8');
@@ -545,6 +695,8 @@ function create_post_type_testimonial()
     ));
 }
 
+add_filter( 'manage_class_posts_columns', 'set_custom_edit_class_show_columns' );
+add_action( 'manage_class_posts_custom_column' , 'custom_class_show_column', 10, 2 );
 // Class custom post type
 function create_post_type_class()
 {
@@ -583,6 +735,46 @@ function create_post_type_class()
     ));
 }
 
+add_filter( 'manage_stripe_payment_log_posts_columns', 'set_custom_edit_stripe_payment_log_columns' );
+add_action( 'manage_stripe_payment_log_posts_custom_column' , 'custom_stripe_payment_log_column', 10, 2 );
+// Stripe Payment Log custom post type
+function create_post_type_stripe_payment_log() {
+    register_post_type( 'stripe_payment_log', 
+    array(
+        'label' => 'Stripe Payments',
+        'description' => 'Stripe Payment Logs',
+        'labels' => array(
+            'name' => 'Stripe Payments',
+            'singular_name' => 'Stripe Payment',
+            'all_items' => 'All Stripe Payments',
+            'view_item' => 'Stripe Payment',
+            'add_new_item' => 'Log new Stripe Payment',
+            'add_new' => 'Log new Stripe Payment',
+            'edit_item' => 'Edit Stripe Payment',
+            'update_item' => 'Stripe Payment',
+            'search_items' => 'Search Stripe Payments',
+            'not_found' => 'Stripe Payment not found',
+            'not_found_in_trash' => 'Stripe Payment not found in Trash'
+        ),
+        'hierarchical'        => false,
+        'public'              => false,
+        'show_ui'             => true,
+        'show_in_nav_menus'   => true,
+        'can_export'          => true,
+        'exclude_from_search' => true,
+        'publicly_queryable'  => false,
+        'map_meta_cap'        => true,
+        'supports'            => array(),
+        'taxonomies'          => array(),
+        'has_archive'         => false,
+        'show_in_rest'        => true,
+        'menu_icon' => 'dashicons-store',
+        'menu_position' => 20
+    ));
+}
+
+add_filter( 'manage_show_posts_columns', 'set_custom_edit_class_show_columns' );
+add_action( 'manage_show_posts_custom_column' , 'custom_class_show_column', 10, 2 );
 // Show custom post type
 function create_post_type_show()
 {
