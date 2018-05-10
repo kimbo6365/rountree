@@ -60,6 +60,7 @@
 		$('.js-request-class').on('click', function() {
 			const $modal = $('.js-request-class-modal');
 			$modal.find('.modal-title').html(`Request ${this.dataset.requestedClass} Class`);
+			$modal.find('.modal-body').find('input[type="hidden"]').val(this.dataset.requestedClass);
 			$modal.modal('show');
 		});
 
