@@ -140,7 +140,7 @@
 			const totalCost = `$${(amount / 100).toFixed(2)}`;
 			$('#js-payment-modal-header').text('Purchase complete!');
 			$('#js-payment-success-first-name').text(first_name);
-			$('#js-payment-success-item-name').text(itemName);
+			$('#js-payment-success-item-name').text(item_name);
 			$('#js-payment-success-card-last-four').text(`*${last4}`);
 			$('#js-payment-success-total-cost').text(totalCost);
 			$('#js-payment-success-email-address').text(receipt_email);
