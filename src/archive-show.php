@@ -11,6 +11,14 @@
 			<?php endwhile; ?>
 		<?php endif; ?>	
 		<div class="row">		
+			<?php
+				$wp_query = new WP_Query( 
+					array(
+						'post_type' => 'class', 
+						'posts_per_page' => -1
+					)
+				);
+			?>
 			<?php if (have_posts()): while (have_posts()) : the_post(); ?>
 				<?php if ($wp_query->post->post_parent == 0): ?>
 					<article id="post-<?php the_ID(); ?>" class="z-layout-item" <?php post_class();  ?>>

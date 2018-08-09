@@ -1,7 +1,12 @@
 <?php
 	$CLASSES_PAGE_ID = 2;
 	// Fetch main Classes page, not any posts
-	$class_page_query = new WP_Query( array( 'p' => $CLASSES_PAGE_ID, 'post_type' => 'any' ) );
+	$class_page_query = new WP_Query( 
+		array( 
+			'p' => $CLASSES_PAGE_ID, 
+			'post_type' => 'any'
+		) 
+	);
 	if ($class_page_query->have_posts()): while ($class_page_query->have_posts()) : $class_page_query->the_post();
 ?>
 <?php /* Template Name: Shows */ get_header(); ?>
@@ -33,7 +38,12 @@
 		<?php endif; ?>
 			<div class="row">
 				<?php
-					$classes_query = new WP_Query( array('post_type' => 'class' ) );
+					$classes_query = new WP_Query( 
+						array(
+							'post_type' => 'class', 
+							'posts_per_page' => -1
+						)
+					);
 					if ($classes_query->have_posts()): while ($classes_query->have_posts()) : $classes_query->the_post();
 				?>
 				<article class="z-layout-item" data-post-type="<?php echo $post->post_type; ?>" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
