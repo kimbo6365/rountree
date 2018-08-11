@@ -14,7 +14,7 @@
 			<?php
 				$wp_query = new WP_Query( 
 					array(
-						'post_type' => 'class', 
+						'post_type' => 'show', 
 						'posts_per_page' => -1
 					)
 				);
