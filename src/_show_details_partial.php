@@ -8,6 +8,7 @@
       <?php 
         if ($wp_query->post->post_parent == 0) {
           the_excerpt();
+          echo '<a class="excerpt" href="<?php echo get_permalink(); ?>">More info &raquo;</a>';
         } else {
           the_content();
         }
@@ -34,6 +35,7 @@
           $time = get_post_meta($post->ID, 'time', true);
           $online_cost = get_post_meta($post->ID, 'online_cost', true);
           $cost_at_door = get_post_meta($post->ID, 'cost_at_door', true);
+          $ticket_link = get_post_meta($post->ID, 'ticket_link', true);
 
           $showtime = date('D, m/d', strtotime($date)) . ' at ' . $time;
           
@@ -47,11 +49,19 @@
             echo '<br />' . buildGoogleMapsLink($location_address) . '</td>';
           }
           echo "<td class=\"show-ticket-info\">";
-          // If there is a value for online cost, and the current time is not past 12:00 Eastern Time on the day of the show, show the purchase link
-          if (!empty($online_cost) && strtotime('now') <= strtotime($date." America/New_York")) {
-            echo '<a class="btn btn-primary js-checkout-btn" data-item-name="'. get_the_title() .'" data-item-cost="'. $online_cost .'" data-item-type="show" data-item-date="'. $showtime .'" data-item-id="'. get_the_ID() .'">Buy tickets!</a>';
-          } else if (!empty($cost_at_door)) {
+
+          /**
+           * If it's past noon on the day of the show, just show the cost at the door if available
+           * Otherwise, if the online_cost field is populated, render the trigger for the Stripe payment modal
+           * Otherwise, if there is a ticket link, render a link to buy tickets externally.
+           */
+
+          if (strtotime('now') >= strtotime($date." America/New_York") && !empty($cost_at_door)) {
             echo "<p>\$$cost_at_door at door</p>";
+          } else if (!empty($online_cost)) {
+            echo '<a class="btn btn-primary js-checkout-btn" data-item-name="'. get_the_title() .'" data-item-cost="'. $online_cost .'" data-item-type="show" data-item-date="'. $showtime .'" data-item-id="'. get_the_ID() .'">Buy tickets!</a>';
+          } else if (!empty($ticket_link)) {
+            echo '<a class="btn btn-primary" target="_blank" href="' . $ticket_link . '">Buy tickets!</a>';
           }
           echo '</td></tr>';
         }
