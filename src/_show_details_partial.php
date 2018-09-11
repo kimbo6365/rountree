@@ -3,12 +3,21 @@
     <img class="circle" src="<?php the_post_thumbnail_url('medium'); ?>" alt="<?php the_title(); ?>" />
   </a>
   <div class="item-details">
-    <h1><a href="<?php the_permalink() ?>"><?php the_title(); ?></a></h1>  
+    <?php
+      if (is_single(get_the_ID())) {
+        echo '<h1>'. get_the_title() .'</h1>';
+      } else {
+        echo '<h1><a href="' . get_permalink() .'">'. get_the_title() .'</a></h1>';
+      }
+    ?>
+      
     <div>
       <?php 
         if ($wp_query->post->post_parent == 0) {
           the_excerpt();
-          echo '<a class="excerpt" href="<?php echo get_permalink(); ?>">More info &raquo;</a>';
+          if (!is_single(get_the_ID())) {
+            echo '<a class="excerpt" href="' . get_permalink() . '">More info &raquo;</a>';
+          }
         } else {
           the_content();
         }

@@ -6264,8 +6264,9 @@ footer {
         width: 58.33333%; } }
     .media-tile .item-details > h1 {
       margin-top: 0;
-      text-align: left;
-      text-decoration: underline; }
+      text-align: left; }
+      .media-tile .item-details > h1 a {
+        text-decoration: underline; }
     .media-tile .item-details > p {
       text-align: justify; }
     .media-tile .item-details .excerpt {
