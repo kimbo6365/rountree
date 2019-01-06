@@ -918,13 +918,13 @@ function rountree_add_to_mailing_list_callback( $form_data ) {
     foreach( $form_data[ 'fields' ] as $field ) { // Field settigns, including the field key and value.
    
 
-        if ($field['key'] === "first_name_1546804274129") {
+        if ($field['admin_label'] === "first_name") {
             $first_name = $field['value']; 
-        } else if ($field['key'] === "lastname_1546804199710") {
+        } else if ($field['admin_label'] === "last_name") {
             $last_name = $field['value'];
-        } else if ($field['key'] === "email_1546799741029") {
+        } else if ($field['admin_label'] === "email_address") {
             $email_address = $field['value'];
-        } else if( $field['key'] === 'sign_me_up_for_monthly_updates_about_classes_and_shows_1546801325626') {
+        } else if( $field['admin_label'] === 'is_subscribed') {
 
             $url = 'https://us17.api.mailchimp.com/3.0/lists/13d3d1014a/members';
             $data = array(
