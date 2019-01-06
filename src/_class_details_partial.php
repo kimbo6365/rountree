@@ -9,6 +9,7 @@
     <?php
       $dates = get_post_meta(get_the_ID(), 'class_dates', true);
       $cost = get_post_meta(get_the_ID(), 'class_cost', true);
+      $is_sold_out = get_field('is_sold_out');
       $location_name = get_post_meta(get_the_ID(), 'class_location_name', true);
       $location_address = get_post_meta(get_the_ID(), 'class_location_address', true);
       $prerequisites = get_post_meta(get_the_ID(), 'class_prerequisites', true);      
@@ -32,8 +33,11 @@
       }
     ?>
     <ul class="info-block">
-      <?php 
-      if (!empty($cost)) {
+      <?php
+
+      if ($is_sold_out === true) {
+        echo '<a class="btn btn-danger btn-lg" disabled>Sold out!</a><a class="btn btn-lg btn-link js-join-waitlist" data-requested-class="' . get_the_title() . '">Get on the waiting list!</a>';
+      } else if (!empty($cost)) {
         echo '<a class="btn btn-primary btn-lg js-checkout-btn" data-item-name="'. get_the_title() .'" data-item-cost="'. $cost .'" data-item-type="class" data-item-id="'. get_the_ID() .'">Sign Up Now!</a>';
       }
         if (!empty($dates)) echo '<li><strong>Dates</strong><span>' . $dates . '</span></li>';

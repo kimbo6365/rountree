@@ -33,6 +33,14 @@
 
 @media screen and (max-width: $screen-xs) {
   .info-block {
+    .btn, button {
+      margin-bottom: 0;
+
+      &:last-of-type {
+        margin-bottom: 30px;
+      }
+    }
+
     li {
       flex-direction: column;
       border-bottom: 1px solid #dbdbdb;

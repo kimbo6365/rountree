@@ -64,6 +64,19 @@
 			$modal.modal('show');
 		});
 
+		$('.js-join-waitlist').on('click', function() {
+			const $modal = $('.js-join-waitlist-modal');
+			$modal.find('.modal-title').html(`Join the waiting list for ${this.dataset.requestedClass}`);
+			$modal.find('.modal-body').find('input[type="hidden"]').val(this.dataset.requestedClass);
+			$modal.modal('show');
+		});
+
+		$('.ninja-form-submission').on('click', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			debugger; // jshint-ignore-line
+		});
+
 		$('.js-trigger-detailed-directions-modal').on('click', function() {
 			const $modal = $('.js-detailed-directions-modal');
 			$modal.find('.modal-title').html(this.dataset.detailedDirectionsPostTitle);

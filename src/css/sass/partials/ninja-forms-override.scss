@@ -1,6 +1,6 @@
 .nf-form-fields-required {
-  font-size: .8;
-  margin-bottom: 15px;
+  font-size: 0;
+  margin-bottom: 0;
 }
 
 .nf-form-title {
@@ -12,4 +12,8 @@
 
 .ninja-forms-field {
   @extend .form-control;
+}
+
+.nf-element[type="checkbox"] {
+  margin-top: 0.5em;
 }

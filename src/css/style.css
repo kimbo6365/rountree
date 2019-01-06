@@ -6365,6 +6365,10 @@ footer {
     margin: 10px 0 30px; }
 
 @media screen and (max-width: 480px) {
+  .info-block .btn, .info-block button {
+    margin-bottom: 0; }
+    .info-block .btn:last-of-type, .info-block button:last-of-type {
+      margin-bottom: 30px; }
   .info-block li {
     flex-direction: column;
     border-bottom: 1px solid #dbdbdb;
@@ -6523,12 +6527,15 @@ footer {
   margin-right: 1em; }
 
 .nf-form-fields-required {
-  font-size: .8;
-  margin-bottom: 15px; }
+  font-size: 0;
+  margin-bottom: 0; }
 
 .contact-page .nf-form-title,
 .js-request-class-modal .nf-form-title {
   display: none; }
+
+.nf-element[type="checkbox"] {
+  margin-top: 0.5em; }
 
 h1, h2, h3, h4, h5, h6,
 .nav,

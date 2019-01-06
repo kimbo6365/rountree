@@ -908,3 +908,71 @@ function buildGoogleMapsLink( $address ) {
     $html .= '</a>';
     return $html;
 }
+
+add_filter( 'rountree_add_to_mailing_list', 'rountree_add_to_mailing_list_callback' );
+function rountree_add_to_mailing_list_callback( $form_data ) {
+    $first_name = '';
+    $last_name = '';
+    $email_address = '';
+ 
+    foreach( $form_data[ 'fields' ] as $field ) { // Field settigns, including the field key and value.
+   
+
+        if ($field['key'] === "first_name_1546804274129") {
+            $first_name = $field['value']; 
+        } else if ($field['key'] === "lastname_1546804199710") {
+            $last_name = $field['value'];
+        } else if ($field['key'] === "email_1546799741029") {
+            $email_address = $field['value'];
+        } else if( $field['key'] === 'sign_me_up_for_monthly_updates_about_classes_and_shows_1546801325626') {
+
+            $url = 'https://us17.api.mailchimp.com/3.0/lists/13d3d1014a/members';
+            $data = array(
+                'email_address' => $email_address, 
+                'merge_fields' => array('FNAME' => $first_name, 'LNAME' => $last_name),
+                'status' => $field['value'] === 1 ? 'subscribed' : 'unsubscribed'
+            );
+            $fields_string = json_encode($data);
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, count($fields));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($fields_string)));
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($ch, CURLOPT_USERPWD, "wordpress:" . get_option('rountree_mailchimp_api_key'));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+            $result = curl_exec($ch);
+            echo $result;
+        }
+   
+  }
+
+}
+ 
+ function rountree_mailchimp_settings_api_init() {
+    add_settings_section(
+       'rountree_mailchimp_setting_section',
+       'Mailchimp settings',
+       'rountree_mailchimp_setting_section_callback',
+       'general'
+   );
+    
+    add_settings_field(
+       'rountree_mailchimp_api_key',
+       'Mailchimp API Key',
+       'rountree_mailchimp_api_key_callback',
+       'general',
+       'rountree_mailchimp_setting_section'
+   );
+    
+    register_setting( 'general', 'rountree_mailchimp_api_key' );
+} 
+
+add_action( 'admin_init', 'rountree_mailchimp_settings_api_init' );
+function rountree_mailchimp_setting_section_callback() {
+    echo '<p>Enter the Mailchimp API key here.</p>';
+}
+function rountree_mailchimp_api_key_callback() {
+    echo '<input name="rountree_mailchimp_api_key" id="rountree_mailchimp_api_key" type="text" class="code" value="'. get_option( 'rountree_mailchimp_api_key' ).'" />';
+}
