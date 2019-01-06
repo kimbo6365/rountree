@@ -569,7 +569,13 @@ function rountree_stripe_payment_log_html($post)
         <tbody>
             <?php
             $html = '';
-            $stripe_payment_query = new WP_Query( array( 'post_type' => 'stripe_payment_log', 'meta_key' => 'linked_post_id', 'meta_value' => $post->ID ) );
+            $stripe_payment_query = new WP_Query( array( 
+                'post_type' => 'stripe_payment_log', 
+                'meta_key' => 'linked_post_id', 
+                'meta_value' => $post->ID,
+                'orderby' => 'date',
+                'order' => 'DESC'
+                ) );
             if ($stripe_payment_query->have_posts()): while ($stripe_payment_query->have_posts()) : $stripe_payment_query->the_post();
             $html .= '<tr>';
                 $html .= '<td>' . get_post_meta(get_the_ID(), 'name', true) . '</td>';
@@ -578,10 +584,10 @@ function rountree_stripe_payment_log_html($post)
                 $html .= '<td>' . get_post_meta(get_the_ID(), 'charge_id', true) . '</td>';
                 $html .= '<td>' . get_the_date() . '</td>';
                 $html .= '</tr>';
-                echo $html;
             endwhile;
-            endif;
+            echo $html;
             wp_reset_postdata();
+            endif;
             ?>
         </tbody>
     </table>
