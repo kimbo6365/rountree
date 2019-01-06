@@ -655,6 +655,12 @@ function rountree_stripe_payment_submit() {
             )
         );
 
+        add_to_mailing_list([
+            'email_address' => $data['emailAddress'], 
+            'first_name' => $data['firstName'],
+            'last_name' => $data['lastName'],
+            'is_subscribed' => $data['emailSignUp']]);
+
         wp_send_json_success($charge);
     } catch (Exception $e) {
         $headers =  array('Content-Type: text/html; charset=UTF-8');
@@ -925,29 +931,35 @@ function rountree_add_to_mailing_list_callback( $form_data ) {
         } else if ($field['admin_label'] === "email_address") {
             $email_address = $field['value'];
         } else if( $field['admin_label'] === 'is_subscribed') {
-
-            $url = 'https://us17.api.mailchimp.com/3.0/lists/13d3d1014a/members';
-            $data = array(
-                'email_address' => $email_address, 
-                'merge_fields' => array('FNAME' => $first_name, 'LNAME' => $last_name),
-                'status' => $field['value'] === 1 ? 'subscribed' : 'unsubscribed'
-            );
-            $fields_string = json_encode($data);
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_POST, count($fields));
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($fields_string)));
-            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-            curl_setopt($ch, CURLOPT_USERPWD, "wordpress:" . get_option('rountree_mailchimp_api_key'));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
-            $result = curl_exec($ch);
-            echo $result;
+            $is_subscribed = $field['value'] === 1;
         }
-   
+        add_to_mailing_list([
+            'email_address' => $email_address, 
+            'first_name' => $first_name, 
+            'last_name' => $last_name, 
+            'is_subscribed' => $is_subscribed]);
   }
+}
 
+function add_to_mailing_list($user_data) {
+    $url = 'https://us17.api.mailchimp.com/3.0/lists/13d3d1014a/members';
+    $data = array(
+        'email_address' => $user_data['email_address'], 
+        'merge_fields' => array('FNAME' => $user_data['first_name'], 'LNAME' => $user_data['last_name']),
+        'status' => $user_data['is_subscribed'] === 1 ? 'subscribed' : 'unsubscribed'
+    );
+    $fields_string = json_encode($data);
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, count($fields));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($fields_string)));
+    curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    curl_setopt($ch, CURLOPT_USERPWD, "wordpress:" . get_option('rountree_mailchimp_api_key'));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+    $result = curl_exec($ch);
+    echo $result;
 }
  
  function rountree_mailchimp_settings_api_init() {

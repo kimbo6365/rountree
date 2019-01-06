@@ -44,7 +44,7 @@
             <div class="form-group checkbox">
               <label>
                 <input type="checkbox" id="js-stripe-subscribe-newsletter">
-                Sign up for Amanda's email newsletter!
+                Sign me up for monthly updates about classes and shows!
               </label>
             </div>
           </div>
