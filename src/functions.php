@@ -988,3 +988,6 @@ function rountree_mailchimp_setting_section_callback() {
 function rountree_mailchimp_api_key_callback() {
     echo '<input name="rountree_mailchimp_api_key" id="rountree_mailchimp_api_key" type="text" class="code" value="'. get_option( 'rountree_mailchimp_api_key' ).'" />';
 }
+
+// Re-enable WP native custom fields after ACF plugin disabled them
+add_filter('acf/settings/remove_wp_meta_box', '__return_false');
