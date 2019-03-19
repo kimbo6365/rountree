@@ -45,9 +45,11 @@
           $online_cost = get_post_meta($post->ID, 'online_cost', true);
           $cost_at_door = get_post_meta($post->ID, 'cost_at_door', true);
           $ticket_link = get_post_meta($post->ID, 'ticket_link', true);
+          $single_show_id = $post->ID;
 
           $showtime = date('D, m/d', strtotime($date)) . ' at ' . $time;
-          
+          wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly. 
+
           echo '<tr>';
           echo '<td class="show-date-time">' . $showtime . '</td>';
           if (!empty($location_name) && !empty($location_address)) {
@@ -68,7 +70,7 @@
           if (strtotime('now') >= strtotime($date." America/New_York") && !empty($cost_at_door)) {
             echo "<p>\$$cost_at_door at door</p>";
           } else if (!empty($online_cost)) {
-            echo '<a class="btn btn-primary js-checkout-btn" data-item-name="'. get_the_title() .'" data-item-cost="'. $online_cost .'" data-item-type="show" data-item-date="'. $showtime .'" data-item-id="'. get_the_ID() .'">Buy tickets!</a>';
+            echo '<a class="btn btn-primary js-checkout-btn" data-item-name="'. get_the_title() .'" data-item-cost="'. $online_cost .'" data-item-type="show" data-item-date="'. $showtime .'" data-item-id="'. $single_show_id .'">Buy tickets!</a>';
           } else if (!empty($ticket_link)) {
             echo '<a class="btn btn-primary" target="_blank" href="' . $ticket_link . '">Buy tickets!</a>';
           }
@@ -76,7 +78,6 @@
         }
         echo '</tbody></table>';
         ?>
-      <?php wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly. ?>            
       <?php endif; ?>
   </div>
 </div>

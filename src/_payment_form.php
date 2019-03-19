@@ -11,7 +11,9 @@
         <div class="modal-body">
           <div>
             <div id="js-payment-item-summary" class="well">
-              Buying tickets for <span id="js-stripe-item-name"></span> on <span id="js-payment-item-date"></span>
+              <span id="js-payment-ticket-sale">Buying tickets for </span>
+              <span id="js-payment-class-sale">Signing up for </span>
+              <span id="js-stripe-item-name"></span> on <span id="js-payment-item-date"></span>
             </div>
             <div class="form-group">
               <label for="js-stripe-first-name">First Name</label>
@@ -58,6 +60,7 @@
         <input id="js-payment-post-id" type="hidden" />
         <input id="js-payment-item-cost" type="hidden" />
         <input id="js-stripe-item-type" type="hidden" />
+        <input id="js-stripe-item-id" type="hidden" />
         <input id="js-stripe-total-cost" type="hidden" />
         <input id="js-stripe-token" type="hidden" />
       </form>

@@ -56,6 +56,11 @@
 				$(this).find('a').toggleClass('rotated');
 			});
 		}
+		$('.js-multi-class-dropdown').on('hidden.bs.dropdown', () => {
+			$('.js-multi-class-item:checked').each((key, item) => {
+				item.checked = false;
+			})
+		});
 
 		$('.js-request-class').on('click', function() {
 			const $modal = $('.js-request-class-modal');
@@ -74,7 +79,6 @@
 		$('.ninja-form-submission').on('click', function(e) {
 			e.preventDefault();
 			e.stopPropagation();
-			debugger; // jshint-ignore-line
 		});
 
 		$('.js-trigger-detailed-directions-modal').on('click', function() {

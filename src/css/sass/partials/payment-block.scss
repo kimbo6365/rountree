@@ -1,0 +1,47 @@
+.payment-block {
+    > .btn, > button, > .btn-group {
+        margin: 10px 0 30px;
+      }
+}
+
+.dropdown-menu {
+    > li  {
+        > a {
+            padding: 0;
+            > label {
+                display: block;
+                padding: 3px 20px;
+                font-size: 16px;
+
+                &.disabled {
+                    cursor: $cursor-disabled;
+                    color: $input-color-placeholder;
+                }
+            }
+            input {
+                margin-right: 4px;
+            }
+        }        
+    }
+
+    > .form-group {
+        margin-bottom: 0;
+    }
+    .dropdown-button {
+        display: block;
+        border-radius: 0;
+        margin: 10px;
+    }
+}
+
+@media screen and (max-width: $screen-xs) {
+    .payment-block {
+      > .btn, > button, > .btn-group {
+        margin-bottom: 0;
+  
+        &:last-of-type {
+          margin-bottom: 30px;
+        }
+      }
+    }
+}

@@ -455,8 +455,8 @@ add_action('wp_ajax_nopriv_rountree_stripe_payment_submit', 'rountree_stripe_pay
 add_action('wp_ajax_rountree_stripe_payment_submit', 'rountree_stripe_payment_submit');
 add_action('init', 'create_post_type_stripe_payment_log'); // Add our Stripe Payment Log post type
 
-// Add new column to shows & classes grids to show total sales
-function set_custom_edit_class_show_columns($columns) {
+// Add new column to shows grids to show total sales
+function set_custom_edit_show_columns($columns) {
     unset( $columns['date'] );
     $columns['sales'] = 'Sales';
     $columns['date'] = 'Date';
@@ -464,7 +464,7 @@ function set_custom_edit_class_show_columns($columns) {
     return $columns;
 }
 
-function custom_class_show_column($column, $post_id) {
+function custom_show_column($column, $post_id) {
     switch ( $column ) {
         case 'sales' :
             $sales = 0;
@@ -475,6 +475,24 @@ function custom_class_show_column($column, $post_id) {
             endif;
             wp_reset_postdata();
             echo $sales; 
+            break;
+    }
+}
+
+
+// Add new column to classes grids to show total spots remaining
+function set_custom_edit_class_columns($columns) {
+    unset( $columns['date'] );
+    $columns['spots_available'] = 'Spots Available';
+    $columns['date'] = 'Date';
+
+    return $columns;
+}
+
+function custom_class_column($column, $post_id) {
+    switch ( $column ) {
+        case 'spots_available' :
+            echo get_post_meta($post_id, 'spots_available', true); 
             break;
     }
 }
@@ -552,7 +570,7 @@ function rountree_stripe_payment_log_html($post)
                 <th class="manage-column column-title column-primary">
                     Name
                 </th>
-                <th class="manage-column num column-comments">
+                <th class="manage-column">
                     Quantity
                 </th>
                 <th class="manage-column">
@@ -631,29 +649,85 @@ function rountree_stripe_payment_submit() {
                 'is_subscribed' => $data['emailSignUp'],
                 'quantity' => $data['itemQuantity'],
                 'item_name' => $data['itemName'],
-                'item_type' => $data['itemType']
+                'item_type' => $data['itemType'],
+                'item_id' => $data['itemId']
             ],
-        ]);
-        // Track the people who have purchased tickets and the quantity in a custom field on the post
-        $purchase_info = get_post_meta($data['postId'], 'purchases')[0];
-        $purchase_info .= "\n" . $data['firstName'] . " " . $data['lastName'] . " (" . $data['itemQuantity'] . ")";
-        // Log stripe payment
-        wp_insert_post(
-            array(
-                'post_title' 	=>  $token,
-                'post_status' 	=>  'publish',
-                'post_type' 	=>  'stripe_payment_log',
-	            'meta_input'   => array(
-                    'name' => $data['firstName'] . ' ' . $data['lastName'],
-                    'quantity' => $data['itemQuantity'],
-		            'customer_id' => $customer->id,
-					'charge_id' => $charge->id,
-	                'amount' => $data['amount'],
-                    'is_subscribed' => $data['emailSignUp'],
-                    'linked_post_id' => $data['postId']
-	            ),
-            )
-        );
+        ]);    
+
+        // Decrement the remaining spots count for classes
+        if ($data['itemType'] === 'class') {
+            $postIds = explode(",", $data['paymentPostId']);
+            $parentPostId;
+            $children = get_children(array('post_type' => 'class', 'post_parent' => $postIds[0]));
+            $class_quantity = count($postIds) . " " . _n( 'class date', 'class dates', $postIds );
+            
+            // If there's only one post ID selected, that means someone's signed up for a whole class.
+            // If the class has children, we should decrememt the number of spots available in each class date.
+            // We should also set the main class's remaining spots to a string like N/A, since that varies by class date.
+            if (count($postIds) === 1) {
+                $class_quantity = "All class dates";
+                if (count($children) > 0) {
+                    $parentPostId = $postId[0];
+                    $postIds = [];
+                    foreach($children as $key => $child_post) {
+                        $postIds[] = $child_post->ID;
+                    }
+                }
+            }
+            foreach ($postIds as $key => $postId) {
+                $spots_available = get_post_meta($postId, 'spots_available', true);
+                $spots_available--;
+                update_post_meta($postId, 'spots_available', $spots_available);
+
+                // If this post has any children, change the parent post's spots available to N/A
+                if (count($children) > 0) {
+                    if ($key === 0) {
+                        update_post_meta($parentPostId, 'spots_available', 'N/A');
+                    }
+                }
+
+                // If there aren't any spots available, indicate that the class is sold out to hide the button
+                if ($spots_available === 0) {
+                    update_post_meta($postId, 'is_sold_out', 'true');
+                }
+                // Log stripe payment
+                wp_insert_post(
+                    array(
+                        'post_title' 	=>  $data['token'],
+                        'post_status' 	=>  'publish',
+                        'post_type' 	=>  'stripe_payment_log',
+                        'meta_input'   => array(
+                            'name' => $data['firstName'] . ' ' . $data['lastName'],
+                            'quantity' => $class_quantity,
+                            'customer_id' => $customer->id,
+                            'charge_id' => $charge->id,
+                            'amount' => $data['amount'],
+                            'is_subscribed' => $data['emailSignUp'],
+                            'linked_post_id' => $postId
+                        ),
+                    )
+                );
+            }
+            
+        } else if ($data['itemType'] === 'show') {
+            // Log stripe payment
+            wp_insert_post(
+                array(
+                    'post_title' 	=>  $data['token'],
+                    'post_status' 	=>  'publish',
+                    'post_type' 	=>  'stripe_payment_log',
+                    'meta_input'   => array(
+                        'name' => $data['firstName'] . ' ' . $data['lastName'],
+                        'quantity' => $data['itemQuantity'],
+                        'customer_id' => $customer->id,
+                        'charge_id' => $charge->id,
+                        'amount' => $data['amount'],
+                        'is_subscribed' => $data['emailSignUp'],
+                        'linked_post_id' => $data['itemId']
+                    ),
+                )
+            );
+        }
 
         add_to_mailing_list([
             'email_address' => $data['emailAddress'], 
@@ -709,8 +783,8 @@ function create_post_type_testimonial()
     ));
 }
 
-add_filter( 'manage_class_posts_columns', 'set_custom_edit_class_show_columns' );
-add_action( 'manage_class_posts_custom_column' , 'custom_class_show_column', 10, 2 );
+add_filter( 'manage_class_posts_columns', 'set_custom_edit_class_columns' );
+add_action( 'manage_class_posts_custom_column' , 'custom_class_column', 10, 2 );
 // Class custom post type
 function create_post_type_class()
 {
@@ -732,6 +806,7 @@ function create_post_type_class()
         ),
         'public' => true,
         'has_archive' => true,
+        'hierarchical' => true,
         'supports' => array(
             'excerpt',
             'title',
@@ -787,8 +862,8 @@ function create_post_type_stripe_payment_log() {
     ));
 }
 
-add_filter( 'manage_show_posts_columns', 'set_custom_edit_class_show_columns' );
-add_action( 'manage_show_posts_custom_column' , 'custom_class_show_column', 10, 2 );
+add_filter( 'manage_show_posts_columns', 'set_custom_edit_show_columns' );
+add_action( 'manage_show_posts_custom_column' , 'custom_show_column', 10, 2 );
 // Show custom post type
 function create_post_type_show()
 {
@@ -942,7 +1017,8 @@ function rountree_add_to_mailing_list_callback( $form_data ) {
 }
 
 function add_to_mailing_list($user_data) {
-    $url = 'https://us17.api.mailchimp.com/3.0/lists/13d3d1014a/members';
+    $email_hash = md5($user_data['email_address']);
+    $url = 'https://us17.api.mailchimp.com/3.0/lists/13d3d1014a/members/' . $email_hash;
     $data = array(
         'email_address' => $user_data['email_address'], 
         'merge_fields' => array('FNAME' => $user_data['first_name'], 'LNAME' => $user_data['last_name']),
@@ -952,14 +1028,13 @@ function add_to_mailing_list($user_data) {
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_POST, count($fields));
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
     curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($fields_string)));
     curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
     curl_setopt($ch, CURLOPT_USERPWD, "wordpress:" . get_option('rountree_mailchimp_api_key'));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
     $result = curl_exec($ch);
-    echo $result;
 }
  
  function rountree_mailchimp_settings_api_init() {

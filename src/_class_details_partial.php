@@ -1,14 +1,25 @@
+<?php
+  $CHILDREN = get_children(array('post_type' => 'class', 'post_parent' => get_the_ID()));
+?>
+
 <section class="media-tile" >
   <a class="item-image" href="<?php the_permalink() ?>">
     <img class="circle" src="<?php the_post_thumbnail_url('medium'); ?>" alt="<?php the_title(); ?>" />
   </a>
   <div class="item-details">
-    <h1><a href="<?php the_permalink() ?>"><?php the_title(); ?></a></h1>  
+    <?php if (is_single(get_the_ID())) : ?>
+        <h1><?php the_title(); ?></h1>
+    <?php else: ?>
+      <h1><a href="<?php the_permalink() ?>"><?php the_title(); ?></a></h1>  
+    <?php endif; ?>
     <?php // Show the excerpt when we're viewing a lists of posts. Show the content when we're viewing a single post. ?>
     <p><?php $wp_query->posts[0]->post_type == "page" ? the_excerpt() : the_content(); ?></p>
     <?php
+      $class_name = get_the_title();
+      $class_id = get_the_ID();
       $dates = get_post_meta(get_the_ID(), 'class_dates', true);
       $cost = get_post_meta(get_the_ID(), 'class_cost', true);
+      $single_class_cost = get_post_meta(get_the_ID(), 'single_class_cost', true);
       $is_sold_out = get_field('is_sold_out');
       $location_name = get_post_meta(get_the_ID(), 'class_location_name', true);
       $location_address = get_post_meta(get_the_ID(), 'class_location_address', true);
@@ -32,14 +43,60 @@
         $displayCost = '$' . $cost;
       }
     ?>
-    <ul class="info-block">
-      <?php
-
-      if ($is_sold_out === true) {
-        echo '<a class="btn btn-danger btn-lg" disabled>Sold out!</a><a class="btn btn-lg btn-link js-join-waitlist" data-requested-class="' . get_the_title() . '">Get on the waiting list!</a>';
-      } else if (!empty($cost)) {
-        echo '<a class="btn btn-primary btn-lg js-checkout-btn" data-item-name="'. get_the_title() .'" data-item-cost="'. $cost .'" data-item-type="class" data-item-id="'. get_the_ID() .'">Sign Up Now!</a>';
-      }
+    <div class="payment-block">
+      <?php if ($is_sold_out === true): ?>
+          echo '<a class="btn btn-danger btn-lg" disabled>Sold out!</a><a class="btn btn-lg btn-link js-join-waitlist" data-requested-class="' . get_the_title() . '">Get on the waiting list!</a>';
+      <?php elseif (!empty($cost)): ?>
+        <?php if (count($CHILDREN) > 0): ?>
+          <?php $is_any_child_sold_out = false; ?>
+          <div class="btn-group" role="group">
+            <div class="btn-group js-multi-class-dropdown" role="group">
+              <button id="child-class-list-<?php the_ID(); ?>" type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Choose dates
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="child-class-list-<?php the_ID(); ?>">
+                <?php foreach ($CHILDREN as $key => $post): ?>
+                  <?php 
+                    $is_sold_out = get_post_meta($post->ID, 'is_sold_out', true) === "true"; 
+                    if ($is_sold_out) {
+                      $is_any_child_sold_out = true;
+                    }
+                  ?>
+                  <li class="form-group">
+                    <a class="js-multi-class-item-toggle" href="#">
+                      <label <?php echo $is_sold_out ? "class=\"disabled\"" : ""; ?>>
+                        <input <?php echo $is_sold_out ? "disabled" : ""; ?> class="js-multi-class-item" data-class-date="<?php echo get_the_title($post->ID); ?>" data-item-id="<?php echo $class_id; ?>" data-single-class-id="<?php echo $post->ID; ?>" type="checkbox">
+                        <?php echo get_the_title($post->ID); ?>
+                        <?php echo $is_sold_out ? "<i>(Sold out)</i>" : ""; ?>
+                      </label>
+                    </a>
+                  </li>
+                <?php endforeach ?>
+                <?php wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly. ?>
+                <li>
+                  <button class="btn btn-primary btn-lg dropdown-button js-checkout-btn" data-item-name="<?php echo $class_name; ?>" data-item-cost="<?php echo $single_class_cost; ?>" data-item-type="class" data-item-id="<?php the_ID(); ?>" data-is-multi="true" type="button" data-item-date="">Sign up now!</button>
+                </li>
+              </ul>
+            </div>
+            <?php if (!$is_any_child_sold_out): ?>
+              <button type="button" class="btn btn-primary btn-lg js-checkout-btn" data-item-name="<?php the_title(); ?>" data-item-cost="<?php echo $cost; ?>" data-item-type="class" data-item-id="<?php the_ID(); ?>">
+                Sign up for all classes!
+              </button>
+            <?php else: ?>
+              <button type="button" class="btn btn-warning btn-lg" disabled>
+                Partially sold out!
+              </button>
+            <?php endif; ?>
+          </div>
+        <?php else: ?>
+          <a class="btn btn-primary btn-lg js-checkout-btn" data-item-name="<?php the_title(); ?>" data-item-cost="<?php echo $cost; ?>" data-item-type="class" data-item-id="<?php the_ID(); ?>">Sign Up Now!</a>
+        <?php endif ?>      
+      <?php endif; ?>
+      
+    </div>    
+    <ul class="info-block">      
+      <?php      
         if (!empty($dates)) echo '<li><strong>Dates</strong><span>' . $dates . '</span></li>';
         if (!empty($cost)) echo '<li><strong>Cost</strong><span>' . $displayCost . $cost_alert . '</span></li>';
         if (!empty($location_name) && !empty($location_address)) {

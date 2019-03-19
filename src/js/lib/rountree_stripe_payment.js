@@ -58,16 +58,32 @@
 			$('body').on('click', '.js-checkout-btn', function(e) {
 				e.preventDefault();
 				const data = this.dataset;
-				const { itemCost, itemType, itemName, itemDate, itemId } = this.dataset;
+				const { itemCost, itemId, itemType, itemName, itemDate, isMulti = false } = this.dataset;
 				let totalCost = itemCost * 100;
+				let paymentPostId = itemId;
+				document.getElementById('js-payment-post-id').value = itemId;
 				if (itemType === 'show') {
+					document.getElementById('js-payment-class-sale').style.display = "none";
 					document.getElementById('js-payment-modal-header').textContent = 'Get your tickets!';
 					document.getElementById('js-payment-item-date').textContent = itemDate;
 					document.getElementById('js-payment-processing-fee-total').textContent = formatCurrency(getProcessingFee(totalCost));
 					totalCost = totalCost + getProcessingFee(totalCost);
-				} else {
+				} else if (itemType === 'class') {
+					document.getElementById('js-payment-ticket-sale').style.display = "none";
+					if (!isMulti) {
+						document.getElementById('js-payment-item-summary').style.display = "none";
+					} else {
+						let datesList = [];
+						let singleClassIds = [];
+						$('.js-multi-class-item:checked').map((key, item) => {
+							datesList.push(item.dataset.classDate);
+							singleClassIds.push(item.dataset.singleClassId);
+						});
+						document.getElementById('js-payment-item-date').textContent = datesList.join(", ");
+						paymentPostId = singleClassIds;
+						totalCost = totalCost * datesList.length;
+					}
 					document.getElementById('js-payment-modal-header').textContent = `Sign up for ${itemName}!`;
-					$('#js-payment-item-summary').hide();
 					$('#js-payment-ticket-quantity').hide();
 					$('#js-payment-processing-fee').hide();
 				}
@@ -76,7 +92,8 @@
 				document.getElementById('js-stripe-item-type').value = itemType;
 				document.getElementById('js-stripe-total-cost').value = totalCost;
 				document.getElementById('js-stripe-item-name').textContent = itemName;
-				document.getElementById('js-payment-post-id').value = itemId;
+				document.getElementById('js-stripe-item-id').value = itemId;
+				document.getElementById('js-payment-post-id').value = paymentPostId;
 				$('#js-stripe-payment-form').modal('show');
 			});
 
@@ -105,6 +122,11 @@
 				  stripeTokenHandler(token);
 				}
 			});
+
+			// Don't close the dropdown after clicking on a checkbox
+			$('body').on('click', '.js-multi-class-item-toggle', (e) => {
+				e.stopPropagation();
+			});
 			/* jshint ignore:end */
 		});
 	// End on load
@@ -125,18 +147,25 @@
 				itemType: document.getElementById('js-stripe-item-type').value,
 				emailSignUp: document.getElementById('js-stripe-subscribe-newsletter').checked,
 				amount: Math.round(document.getElementById('js-stripe-total-cost').value),
-				postId: document.getElementById('js-payment-post-id').value
-			}
+				itemId: document.getElementById('js-stripe-item-id').value,
+				paymentPostId: document.getElementById('js-payment-post-id').value
+			},
+			dataType: 'json'
 		})
 		.success(function(response) {
 			if (response && !response.success) {
 				$('#js-payment-modal-header').text('An error occurred...');
 				$('#stripe-payment-form').hide();
 				$('#js-stripe-error-message').show();
-				$('#js-stripe-payment-form-spinner').hide();
 				return;
 			}
-			const { amount, description, metadata: { first_name, quantity, item_name, item_type }, receipt_email, source: { last4 } } = response.data;
+			const { 
+				amount, 
+				description, 
+				metadata: { first_name, quantity, item_name, item_type }, 
+				receipt_email, 
+				source: { last4 } 
+			} = response.data;
 			const totalCost = `$${(amount / 100).toFixed(2)}`;
 			$('#js-payment-modal-header').text('Purchase complete!');
 			$('#js-payment-success-first-name').text(first_name);
@@ -144,11 +173,19 @@
 			$('#js-payment-success-card-last-four').text(`*${last4}`);
 			$('#js-payment-success-total-cost').text(totalCost);
 			$('#js-payment-success-email-address').text(receipt_email);
-			if (itemType === 'show') {
+			if (item_type === 'show') {
 				$('#js-payment-success-show-ticket-quantity').text(`${quantity} ticket(s) to`).show();
 			}
 			$('#stripe-payment-form').hide();
 			$('#js-stripe-success-message').show();
+			$('#js-stripe-payment-form-spinner').hide();
+		})
+		.error((response) => {
+			$('#js-payment-modal-header').text('An error occurred...');
+			$('#stripe-payment-form').hide();
+			$('#js-stripe-error-message').show();
+		})
+		.complete(() => {
 			$('#js-stripe-payment-form-spinner').hide();
 		});
 	}

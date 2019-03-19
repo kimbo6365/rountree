@@ -6321,6 +6321,35 @@ footer {
     .info-block li > strong:after {
       content: ''; } }
 
+.payment-block > .btn, .payment-block > button, .payment-block > .btn-group {
+  margin: 10px 0 30px; }
+
+.dropdown-menu > li > a {
+  padding: 0; }
+  .dropdown-menu > li > a > label {
+    display: block;
+    padding: 3px 20px;
+    font-size: 16px; }
+    .dropdown-menu > li > a > label.disabled {
+      cursor: not-allowed;
+      color: #999; }
+  .dropdown-menu > li > a input {
+    margin-right: 4px; }
+
+.dropdown-menu > .form-group {
+  margin-bottom: 0; }
+
+.dropdown-menu .dropdown-button {
+  display: block;
+  border-radius: 0;
+  margin: 10px; }
+
+@media screen and (max-width: 480px) {
+  .payment-block > .btn, .payment-block > button, .payment-block > .btn-group {
+    margin-bottom: 0; }
+    .payment-block > .btn:last-of-type, .payment-block > button:last-of-type, .payment-block > .btn-group:last-of-type {
+      margin-bottom: 30px; } }
+
 .z-layout-item {
   position: relative;
   min-height: 1px;
