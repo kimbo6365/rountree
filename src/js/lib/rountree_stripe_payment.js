@@ -73,13 +73,18 @@
 					if (!isMulti) {
 						document.getElementById('js-payment-item-summary').style.display = "none";
 					} else {
+						let keysList = []; // Used for tagging classes, e.g., "Scene Doctor 1"
 						let datesList = [];
 						let singleClassIds = [];
-						$('.js-multi-class-item:checked').map((key, item) => {
-							datesList.push(item.dataset.classDate);
-							singleClassIds.push(item.dataset.singleClassId);
+						$('.js-multi-class-item').map((key, item) => {
+							if (item.checked) {
+								keysList.push(key + 1);
+								datesList.push(item.dataset.classDate);
+								singleClassIds.push(item.dataset.singleClassId);
+							}
 						});
 						document.getElementById('js-payment-item-date').textContent = datesList.join(", ");
+						document.getElementById('js-stripe-item-keys').value = keysList.join(",");
 						paymentPostId = singleClassIds;
 						totalCost = totalCost * datesList.length;
 					}
@@ -144,6 +149,7 @@
 				emailAddress: document.getElementById('js-stripe-email-address').value,
 				itemQuantity: document.getElementById('js-stripe-item-quantity').value,
 				itemName: document.getElementById('js-stripe-item-name').textContent,
+				itemKeys: document.getElementById('js-stripe-item-keys').value,
 				itemType: document.getElementById('js-stripe-item-type').value,
 				emailSignUp: document.getElementById('js-stripe-subscribe-newsletter').checked,
 				amount: Math.round(document.getElementById('js-stripe-total-cost').value),

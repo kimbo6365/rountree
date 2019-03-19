@@ -59,6 +59,7 @@
         </div>
         <input id="js-payment-post-id" type="hidden" />
         <input id="js-payment-item-cost" type="hidden" />
+        <input id="js-stripe-item-keys" type="hidden" />
         <input id="js-stripe-item-type" type="hidden" />
         <input id="js-stripe-item-id" type="hidden" />
         <input id="js-stripe-total-cost" type="hidden" />

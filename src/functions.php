@@ -667,6 +667,7 @@ function rountree_stripe_payment_submit() {
             if (count($postIds) === 1) {
                 $class_quantity = "All class dates";
                 if (count($children) > 0) {
+                    $total_class_dates = count($children);
                     $parentPostId = $postId[0];
                     $postIds = [];
                     foreach($children as $key => $child_post) {
@@ -706,7 +707,45 @@ function rountree_stripe_payment_submit() {
                             'linked_post_id' => $postId
                         ),
                     )
-                );
+                );                
+            }
+
+            // Add to "Amanda Rountree and Friends" list in Mailchimp
+            add_to_mailing_list([
+                'email_address' => $data['emailAddress'], 
+                'first_name' => $data['firstName'],
+                'last_name' => $data['lastName'],
+                'is_subscribed' => $data['emailSignUp']],
+                false
+            );
+            add_tags_to_contact($data['emailAddress'], ['Student'], false);
+
+            // Add students to the "Current Students" list in Mailchimp and tag them with what they're signed up for
+            add_to_mailing_list([
+                'email_address' => $data['emailAddress'], 
+                'first_name' => $data['firstName'],
+                'last_name' => $data['lastName'],
+                'is_subscribed' => $data['emailSignUp']],
+                true
+            );
+
+            // If someone selected individual class dates, let's build up an array of all the tags we should apply,
+            // e.g., Scene Doctor 2, Scene Doctor 4
+            if ($data['itemKeys']) {
+                $tags = [];
+                $itemKeys = explode(",", $data['itemKeys']);
+                foreach ($itemKeys as $key => $itemKey) {
+                    $tags[] = $data['itemName'] . ' ' . $itemKey;
+                }
+                add_tags_to_contact($data['emailAddress'], $tags, true);
+            } else if ($total_class_dates) { // If someone signed up for *all* class dates, make sure we build out all those tags!
+                $tags = [];
+                for ($i = 0; $i < $total_class_dates; $i++) {
+                    $tags[] = $data['itemName'] . ' ' . ($i + 1);
+                }
+                add_tags_to_contact($data['emailAddress'], $tags, true);
+            } else {
+                add_tags_to_contact($data['emailAddress'], [$data['itemName']], true);
             }
             
         } else if ($data['itemType'] === 'show') {
@@ -727,13 +766,17 @@ function rountree_stripe_payment_submit() {
                     ),
                 )
             );
-        }
 
-        add_to_mailing_list([
-            'email_address' => $data['emailAddress'], 
-            'first_name' => $data['firstName'],
-            'last_name' => $data['lastName'],
-            'is_subscribed' => $data['emailSignUp']]);
+            // Add to "Amanda Rountree and Friends" list in Mailchimp
+            add_to_mailing_list([
+                'email_address' => $data['emailAddress'], 
+                'first_name' => $data['firstName'],
+                'last_name' => $data['lastName'],
+                'is_subscribed' => $data['emailSignUp']],
+                false
+            );
+            add_tags_to_contact($data['emailAddress'], ['Audience'], false);
+        }
 
         wp_send_json_success($charge);
     } catch (Exception $e) {
@@ -1012,23 +1055,70 @@ function rountree_add_to_mailing_list_callback( $form_data ) {
             'email_address' => $email_address, 
             'first_name' => $first_name, 
             'last_name' => $last_name, 
-            'is_subscribed' => $is_subscribed]);
+            'is_subscribed' => $is_subscribed],
+            false
+        );
   }
 }
 
-function add_to_mailing_list($user_data) {
+/**
+ * 
+ */
+function add_to_mailing_list($user_data, $is_class_list) {
+    $is_subscribed = 'unsubscribed';
+    if ($is_class_list || $user_data['is_subscribed'] === 1) {
+        $is_subscribed = 'subscribed';
+    }
+
     $email_hash = md5($user_data['email_address']);
-    $url = 'https://us17.api.mailchimp.com/3.0/lists/13d3d1014a/members/' . $email_hash;
+    // Swap out the list ID in the URL depending on which list we're adding to
+    if ($is_class_list) {
+        $url = 'https://us17.api.mailchimp.com/3.0/lists/60360ee881/members/' . $email_hash;
+    } else {
+        $url = 'https://us17.api.mailchimp.com/3.0/lists/13d3d1014a/members/' . $email_hash;
+    }
     $data = array(
         'email_address' => $user_data['email_address'], 
         'merge_fields' => array('FNAME' => $user_data['first_name'], 'LNAME' => $user_data['last_name']),
-        'status' => $user_data['is_subscribed'] === 1 ? 'subscribed' : 'unsubscribed'
+        'status' => $is_subscribed
     );
     $fields_string = json_encode($data);
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($fields_string)));
+    curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    curl_setopt($ch, CURLOPT_USERPWD, "wordpress:" . get_option('rountree_mailchimp_api_key'));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+    $result = curl_exec($ch);
+}
+
+function add_tags_to_contact($email_address, $tags, $is_class) {
+    $email_hash = md5($email_address);
+    // Swap out the list ID in the URL depending on which list we're adding to
+    if ($is_class) {
+        $url = 'https://us17.api.mailchimp.com/3.0/lists/60360ee881/members/' . $email_hash . '/tags';
+    } else {
+        $url = 'https://us17.api.mailchimp.com/3.0/lists/13d3d1014a/members/' . $email_hash . '/tags';
+    }
+    $tagsList = [];
+    foreach($tags as $key => $tag) {
+        $tagsList[] = [
+            'name' => $tag,
+            'status' => 'active'
+        ];
+    }
+    $data = array(
+        'tags' => $tagsList
+    );
+    
+    $fields_string = json_encode($data);
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POST, count($data));
     curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($fields_string)));
     curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
