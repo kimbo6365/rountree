@@ -27,6 +27,8 @@
       $discount_end_date = get_post_meta(get_the_ID(), 'class_discount_end_date', true);
       $discount_amount = get_post_meta(get_the_ID(), 'class_discount_amount', true);
       $discount_label = get_post_meta(get_the_ID(), 'class_discount_label', true);
+      $external_payment_link = get_post_meta(get_the_ID(), 'external_payment_link', true);
+
       if ($discount_end_date) {
         // The date is stored in ms and the PHP date functions expect s, so multiply by 1000
         $discount_end_date = strtotime($discount_end_date);
@@ -45,7 +47,9 @@
     ?>
     <div class="payment-block">
       <?php if ($is_sold_out === true): ?>
-          echo '<a class="btn btn-danger btn-lg" disabled>Sold out!</a><a class="btn btn-lg btn-link js-join-waitlist" data-requested-class="' . get_the_title() . '">Get on the waiting list!</a>';
+          <a class="btn btn-danger btn-lg" disabled>Sold out!</a><a class="btn btn-lg btn-link js-join-waitlist" data-requested-class="' . get_the_title() . '">Get on the waiting list!</a>
+      <?php elseif (!empty($external_payment_link)): ?>
+          <a class="btn btn-primary btn-lg" href="<?php echo $external_payment_link; ?>" target="_blank" rel="noopener noreferrer">Sign Up Now!</a>
       <?php elseif (!empty($cost)): ?>
         <?php if (count($CHILDREN) > 0): ?>
           <?php $is_any_child_sold_out = false; ?>
@@ -58,7 +62,7 @@
               <ul class="dropdown-menu" aria-labelledby="child-class-list-<?php the_ID(); ?>">
                 <?php foreach ($CHILDREN as $key => $post): ?>
                   <?php 
-                    $is_sold_out = get_post_meta($post->ID, 'is_sold_out', true) === "true"; 
+                    $is_sold_out = get_post_meta($post->ID, 'is_sold_out', true) == true; // Make sure this is truthy since the checkbox value is sometimes "true" and sometimes "1"
                     if ($is_sold_out) {
                       $is_any_child_sold_out = true;
                     }
@@ -104,7 +108,7 @@
         }
         if (!empty($prerequisites)) echo '<li><strong>Prerequisites</strong><span>' . $prerequisites . '</span></li>';							
         
-        if (empty($cost)) {
+        if (empty($cost) && empty($external_payment_link)) {
           echo '<a class="btn btn-default btn-lg btn-info js-request-class" data-requested-class="' . get_the_title() . '">Request this class</a>';
         }
       ?>
