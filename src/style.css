@@ -6387,6 +6387,10 @@ footer {
 .blog-excerpt > p {
   padding-left: 4.5em; }
 
+.blog-excerpt a {
+  text-decoration: underline;
+  color: #337ab7; }
+
 @media (min-width: 768px) {
   .blog-excerpt .read-more-wrapper {
     margin-left: 8.33333%; } }
@@ -6535,6 +6539,10 @@ section.container {
   font-family: 'Zilla Slab';
   color: #999; }
 
+.post a {
+  text-decoration: underline;
+  color: #337ab7; }
+
 .banner-image-container {
   height: 400px;
   overflow: hidden;
@@ -6602,6 +6610,9 @@ section.container {
 
 .page-title {
   margin-bottom: 30px; }
+  .page-title a {
+    text-decoration: none;
+    color: inherit; }
 
 .alert {
   font-size: 16px;

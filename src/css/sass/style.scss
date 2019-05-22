@@ -74,6 +74,11 @@ section.container {
   color: #999;
 }
 
+.post a {
+  text-decoration: underline;
+  color: #337ab7;
+}
+
 .banner-image-container {
 	height: 400px;
 	overflow: hidden;
@@ -158,6 +163,11 @@ section.container {
 
 .page-title {
   margin-bottom: 30px;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 }
 
 .nf-element[type="button"] {

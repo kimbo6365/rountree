@@ -12,6 +12,11 @@
     padding-left: 4.5em;
   }
 
+  a {
+    text-decoration: underline;
+    color: #337ab7;
+  }
+
   .view-article {
     @extend .btn-default;
   }

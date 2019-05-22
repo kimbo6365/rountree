@@ -41,12 +41,6 @@
 						} else {
 							$image = get_the_post_thumbnail_url($post->ID, 'large');							
 						}
-						$categories = get_the_category($post->ID);
-						foreach($categories as $cat) {
-							if (is_single() && $cat->cat_ID !== 2 && $cat->cat_ID !== 4 && $cat->cat_ID !== 6) {
-								$image = get_the_post_thumbnail_url(15, 'large');
-							}
-						}
 					?>
 					<div class="banner-image-container" style="background-image: url('<?php echo $image; ?>'); <?php if ($post->ID === 6) echo 'background-position-x: left;' ?>">
 						<div class="page-title-wrapper">
