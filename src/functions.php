@@ -437,7 +437,7 @@ add_filter('post_thumbnail_html', 'remove_width_attribute', 10 ); // Remove widt
 add_filter('image_send_to_editor', 'remove_width_attribute', 10 ); // Remove width and height dynamic attributes to post images
 add_filter( 'postmeta_form_limit' , 'customfield_limit_increase' );
 function customfield_limit_increase( $limit ) {
-    $limit = 150;
+    $limit = 300;
     return $limit;
 }
 
