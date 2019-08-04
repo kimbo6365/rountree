@@ -408,6 +408,7 @@ add_action('init', 'register_html5_menu'); // Add HTML5 Blank Menu
 add_action('init', 'create_post_type_testimonial'); // Add our Testimonial Post Type
 add_action('init', 'create_post_type_class'); // Add our Class Post Type
 add_action('init', 'create_post_type_show'); // Add our Show Post Type
+add_action('init', 'create_post_type_landing_page'); // Add our Landing Page Post Type
 add_action('widgets_init', 'my_remove_recent_comments_style'); // Remove inline Recent Comment Styles from wp_head()
 add_action('init', 'html5wp_pagination'); // Add our HTML5 Pagination
 
@@ -738,7 +739,7 @@ function rountree_stripe_payment_submit() {
                     $tags[] = $data['itemName'] . ' ' . $itemKey;
                 }
                 add_tags_to_contact($data['emailAddress'], $tags, true);
-            } else if ($total_class_dates) { // If someone signed up for *all* class dates, make sure we build out all those tags!
+            } else if (isset($total_class_dates)) { // If someone signed up for *all* class dates, make sure we build out all those tags!
                 $tags = [];
                 for ($i = 0; $i < $total_class_dates; $i++) {
                     $tags[] = $data['itemName'] . ' ' . ($i + 1);
@@ -949,6 +950,48 @@ function create_post_type_show()
     ));
 }
 
+// Show custom post type
+function create_post_type_landing_page()
+{
+    register_post_type('landing_page', // Register Custom Post Type
+        array(
+        'labels' => array(
+            'name' => __('Landing Pages', 'rountree'),
+            'singular_name' => __('Landing Page', 'rountree'),
+            'add_new' => __('Add New', 'rountree'),
+            'add_new_item' => __('Add New Landing Page', 'rountree'),
+            'edit' => __('Edit', 'rountree'),
+            'edit_item' => __('Edit Landing Page', 'rountree'),
+            'new_item' => __('New Landing Page', 'rountree'),
+            'view' => __('View Landing Page', 'rountree'),
+            'view_item' => __('View Landing Page', 'rountree'),
+            'search_items' => __('Search Landing Pages', 'rountree'),
+            'not_found' => __('No Landing Pages found', 'rountree'),
+            'not_found_in_trash' => __('No Landing Pages found in Trash', 'rountree')
+        ),
+        'public' => true,
+        'hierarchical' => true,
+        'has_archive' => true,
+        'supports' => array(
+            'excerpt',
+            'title',
+            'editor',
+            'custom-fields',
+            'revisions',
+            'thumbnail',
+            'post-formats',
+            'page-attributes' 
+        ), // Go to Dashboard Custom HTML5 Blank post for supports
+        'can_export' => true, // Allows export in Tools > Export
+        'taxonomies' => array(
+            'category',
+        ),
+        'menu_icon' => 'dashicons-admin-links',
+        'menu_position' => 5,
+        'rewrite' => array( 'slug' => 'landing_pages' )
+    ));
+}
+
 add_action('nav_menu_css_class', 'add_current_nav_class', 10, 2 );
 
 function add_current_nav_class($classes, $item) {
@@ -957,7 +1000,7 @@ function add_current_nav_class($classes, $item) {
     global $post;
     
     // Getting the post type of the current post
-    $current_post_type = get_post_type_object(get_post_type($post->ID));
+    $current_post_type = get_post_type_object(get_post_type($item->ID));
     $current_post_type_slug = $current_post_type->rewrite['slug'];
         
     // Getting the URL of the menu item
@@ -1061,12 +1104,40 @@ function rountree_add_to_mailing_list_callback( $form_data ) {
   }
 }
 
+add_filter( 'rountree_submitted_landing_page', 'rountree_submitted_landing_page_callback' );
+function rountree_submitted_landing_page_callback( $form_data ) {
+    $first_name = '';
+    $last_name = '';
+    $email_address = '';
+ 
+    foreach( $form_data[ 'fields' ] as $field ) { // Field settigns, including the field key and value.
+        if ($field['admin_label'] === "first_name") {
+            $first_name = $field['value']; 
+        } else if ($field['admin_label'] === "last_name") {
+            $last_name = $field['value'];
+        } else if ($field['admin_label'] === "email_address") {
+            $email_address = $field['value'];
+        } else if( $field['admin_label'] === 'is_subscribed') {
+            $is_subscribed = $field['value'] === 1;
+        }
+        add_to_mailing_list([
+            'email_address' => $email_address, 
+            'first_name' => $first_name, 
+            'last_name' => $last_name, 
+            'is_subscribed' => $is_subscribed],
+            false
+        );
+
+        add_tags_to_contact($email_address, [], false);
+  }
+}
+
 /**
  * 
  */
 function add_to_mailing_list($user_data, $is_class_list) {
     $is_subscribed = 'unsubscribed';
-    if ($is_class_list || $user_data['is_subscribed'] === 1) {
+    if ($is_class_list || $user_data['is_subscribed'] == 1) {
         $is_subscribed = 'subscribed';
     }
 
@@ -1093,6 +1164,10 @@ function add_to_mailing_list($user_data, $is_class_list) {
     curl_setopt($ch, CURLOPT_USERPWD, "wordpress:" . get_option('rountree_mailchimp_api_key'));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
     $result = curl_exec($ch);
+    if (curl_getinfo($ch)["http_code"] > 299) {
+        write_log("Could not add contact to list: {$result}");
+    }
+    curl_close($ch);
 }
 
 function add_tags_to_contact($email_address, $tags, $is_class) {
@@ -1125,6 +1200,10 @@ function add_tags_to_contact($email_address, $tags, $is_class) {
     curl_setopt($ch, CURLOPT_USERPWD, "wordpress:" . get_option('rountree_mailchimp_api_key'));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
     $result = curl_exec($ch);
+    if (curl_getinfo($ch)["http_code"] > 299) {
+        write_log("Could not add tags to contact: {$result}");
+    }
+    curl_close($ch);
 }
  
  function rountree_mailchimp_settings_api_init() {

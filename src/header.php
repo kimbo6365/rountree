@@ -38,11 +38,11 @@
 						if (is_home()) {
 							// Hard-code the ID of the blog page
 							$image = get_the_post_thumbnail_url(15, 'large');
-						} else {
+						} elseif (!empty($post_type)) {
 							$image = get_the_post_thumbnail_url($post->ID, 'large');							
 						}
 					?>
-					<div class="banner-image-container" style="background-image: url('<?php echo $image; ?>'); <?php if ($post->ID === 6) echo 'background-position-x: left;' ?>">
+					<div class="banner-image-container" style="background-image: url('<?php if (isset($image)) echo $image; ?>'); <?php if (isset($post) && $post->ID === 6) echo 'background-position-x: left;' ?>">
 						<div class="page-title-wrapper">
 							<div class="title-text">
 								<h1>
@@ -51,7 +51,7 @@
 											echo 'Amanda Rountree';
 										} elseif (is_home()) {
 											echo 'Amanda\'s Blog';
-										} else {
+										} elseif (!empty($post_type)) {
 											echo get_the_title($post->ID);
 										}
 									?></h1>
