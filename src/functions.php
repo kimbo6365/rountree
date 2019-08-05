@@ -970,8 +970,9 @@ function create_post_type_landing_page()
             'not_found_in_trash' => __('No Landing Pages found in Trash', 'rountree')
         ),
         'public' => true,
-        'hierarchical' => true,
-        'has_archive' => true,
+        'publicly_queryable' => true,
+        'hierarchical' => false,
+        'has_archive' => false,
         'supports' => array(
             'excerpt',
             'title',
@@ -983,9 +984,6 @@ function create_post_type_landing_page()
             'page-attributes' 
         ), // Go to Dashboard Custom HTML5 Blank post for supports
         'can_export' => true, // Allows export in Tools > Export
-        'taxonomies' => array(
-            'category',
-        ),
         'menu_icon' => 'dashicons-admin-links',
         'menu_position' => 5,
         'rewrite' => array( 'slug' => 'landing_pages' )
@@ -1076,7 +1074,7 @@ function buildGoogleMapsLink( $address ) {
     return $html;
 }
 
-add_filter( 'rountree_add_to_mailing_list', 'rountree_add_to_mailing_list_callback' );
+add_action( 'rountree_add_to_mailing_list', 'rountree_add_to_mailing_list_callback' );
 function rountree_add_to_mailing_list_callback( $form_data ) {
     $first_name = '';
     $last_name = '';
@@ -1093,18 +1091,18 @@ function rountree_add_to_mailing_list_callback( $form_data ) {
             $email_address = $field['value'];
         } else if( $field['admin_label'] === 'is_subscribed') {
             $is_subscribed = $field['value'] === 1;
-        }
-        add_to_mailing_list([
-            'email_address' => $email_address, 
-            'first_name' => $first_name, 
-            'last_name' => $last_name, 
-            'is_subscribed' => $is_subscribed],
-            false
-        );
+        }        
   }
+  add_to_mailing_list([
+    'email_address' => $email_address, 
+    'first_name' => $first_name, 
+    'last_name' => $last_name, 
+    'is_subscribed' => $is_subscribed],
+    false
+);
 }
 
-add_filter( 'rountree_submitted_landing_page', 'rountree_submitted_landing_page_callback' );
+add_action( 'rountree_submitted_landing_page', 'rountree_submitted_landing_page_callback' );
 function rountree_submitted_landing_page_callback( $form_data ) {
     $first_name = '';
     $last_name = '';
@@ -1119,17 +1117,19 @@ function rountree_submitted_landing_page_callback( $form_data ) {
             $email_address = $field['value'];
         } else if( $field['admin_label'] === 'is_subscribed') {
             $is_subscribed = $field['value'] === 1;
-        }
-        add_to_mailing_list([
-            'email_address' => $email_address, 
-            'first_name' => $first_name, 
-            'last_name' => $last_name, 
-            'is_subscribed' => $is_subscribed],
-            false
-        );
-
-        add_tags_to_contact($email_address, [], false);
+        } else if ($field['admin_label'] === 'mailchimp_tag_name') {
+            $mailchimp_tag = $field['value'];
+        }      
   }
+  add_to_mailing_list([
+    'email_address' => $email_address, 
+    'first_name' => $first_name, 
+    'last_name' => $last_name, 
+    'is_subscribed' => $is_subscribed],
+    false
+);
+
+add_tags_to_contact($email_address, [$mailchimp_tag], false);
 }
 
 /**
