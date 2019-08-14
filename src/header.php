@@ -38,7 +38,7 @@
 						if (is_home()) {
 							// Hard-code the ID of the blog page
 							$image = get_the_post_thumbnail_url(15, 'large');
-						} elseif (!empty($post_type)) {
+						} else if (!empty(get_post_type())) {
 							$image = get_the_post_thumbnail_url($post->ID, 'large');							
 						}
 					?>
@@ -49,9 +49,9 @@
 									<?php
 										if (is_front_page()) {
 											echo 'Amanda Rountree';
-										} elseif (is_home()) {
+										} else if (is_home()) {
 											echo 'Amanda\'s Blog';
-										} elseif (!empty($post_type)) {
+										} else if (!empty(get_post_type())) {
 											echo get_the_title($post->ID);
 										}
 									?></h1>
