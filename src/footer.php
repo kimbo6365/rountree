@@ -47,6 +47,21 @@
 					</div>
 				</div>
 			</div>
+			<div class="modal fade js-free-rsvp">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h5 class="modal-title">RSVP Now</h5>
+						</div>
+						<div class="modal-body">
+							<?php echo do_shortcode('[ninja_form id=5]'); ?>
+						</div>
+					</div>
+				</div>
+			</div>
 			<div class="modal fade js-detailed-directions-modal">
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">

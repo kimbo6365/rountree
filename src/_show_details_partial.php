@@ -46,6 +46,8 @@
           $cost_at_door = get_post_meta($post->ID, 'cost_at_door', true);
           $ticket_link = get_post_meta($post->ID, 'ticket_link', true);
           $single_show_id = $post->ID;
+          $should_show_free_rsvp = get_field('should_show_free_rsvp');
+          $mailchimp_tag_name = get_post_meta($single_show_id, 'mailchimp_tag_name', true);
 
           $showtime = date('D, m/d', strtotime($date)) . ' at ' . $time;
           wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly. 
@@ -68,11 +70,17 @@
            */
 
           if (strtotime('now') >= strtotime($date." America/New_York") && !empty($cost_at_door)) {
-            echo "<p>\$$cost_at_door at door</p>";
+            if ($should_show_free_rsvp) {
+              echo "Free";
+            } else {
+              echo "<p>\$$cost_at_door at door</p>";
+            }
+          } else if ($should_show_free_rsvp) {
+              echo '<span>Tickets are free!</span><br /><a class="btn btn-primary js-free-rsvp-btn" data-item-name="'. get_the_title() .'" data-mailchimp-tag-name="' . $mailchimp_tag_name . '">RSVP</a>';
           } else if (!empty($online_cost)) {
-            echo '<a class="btn btn-primary js-checkout-btn" data-item-name="'. get_the_title() .'" data-item-cost="'. $online_cost .'" data-item-type="show" data-item-date="'. $showtime .'" data-item-id="'. $single_show_id .'">Buy tickets!</a>';
+              echo '<a class="btn btn-primary js-checkout-btn" data-item-name="'. get_the_title() .'" data-item-cost="'. $online_cost .'" data-item-type="show" data-item-date="'. $showtime .'" data-item-id="'. $single_show_id .'">Buy tickets!</a>';
           } else if (!empty($ticket_link)) {
-            echo '<a class="btn btn-primary" target="_blank" href="' . $ticket_link . '">Buy tickets!</a>';
+              echo '<a class="btn btn-primary" target="_blank" href="' . $ticket_link . '">Buy tickets!</a>';
           }
           echo '</td></tr>';
         }

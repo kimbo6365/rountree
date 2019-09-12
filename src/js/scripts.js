@@ -76,6 +76,13 @@
 			$modal.modal('show');
 		});
 
+		$('.js-free-rsvp-btn').on('click', function() {
+			const $modal = $('.js-free-rsvp');
+			$modal.find('.modal-title').html(`RSVP for ${this.dataset.itemName}`);
+			$modal.find('.modal-body').find('input[type="hidden"]').val(this.dataset.mailchimpTagName);
+			$modal.modal('show');
+		});
+
 		$('.ninja-form-submission').on('click', function(e) {
 			e.preventDefault();
 			e.stopPropagation();
