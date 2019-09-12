@@ -21,6 +21,7 @@
       $cost = get_post_meta(get_the_ID(), 'class_cost', true);
       $single_class_cost = get_post_meta(get_the_ID(), 'single_class_cost', true);
       $is_sold_out = get_field('is_sold_out');
+      $is_open_for_waitlist = get_field('is_open_for_waitlist');
       $location_name = get_post_meta(get_the_ID(), 'class_location_name', true);
       $location_address = get_post_meta(get_the_ID(), 'class_location_address', true);
       $prerequisites = get_post_meta(get_the_ID(), 'class_prerequisites', true);      
@@ -47,9 +48,11 @@
     ?>
     <div class="payment-block">
       <?php if ($is_sold_out === true): ?>
-          <a class="btn btn-danger btn-lg" disabled>Sold out!</a><a class="btn btn-lg btn-link js-join-waitlist" data-requested-class="' . get_the_title() . '">Get on the waiting list!</a>
+          <a class="btn btn-danger btn-lg" disabled>Sold out!</a><a class="btn btn-lg btn-link js-join-waitlist" data-requested-class="<?php echo get_the_title(); ?>">Get on the waiting list!</a>
       <?php elseif (!empty($external_payment_link)): ?>
           <a class="btn btn-primary btn-lg" href="<?php echo $external_payment_link; ?>" target="_blank" rel="noopener noreferrer">Sign Up Now!</a>
+      <?php elseif ($is_open_for_waitlist): ?>
+          <a class="btn btn-primary btn-lg js-join-waitlist" data-requested-class="<?php echo get_the_title(); ?>">Join the Waiting List!</a>
       <?php elseif (!empty($cost)): ?>
         <?php if (count($CHILDREN) > 0): ?>
           <?php $is_any_child_sold_out = false; ?>
@@ -108,7 +111,7 @@
         }
         if (!empty($prerequisites)) echo '<li><strong>Prerequisites</strong><span>' . $prerequisites . '</span></li>';							
         
-        if (empty($cost) && empty($external_payment_link)) {
+        if (empty($cost) && empty($external_payment_link) && !$is_open_for_waitlist) {
           echo '<a class="btn btn-default btn-lg btn-info js-request-class" data-requested-class="' . get_the_title() . '">Request this class</a>';
         }
       ?>
