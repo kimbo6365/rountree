@@ -27,6 +27,13 @@
               <label for="js-stripe-email-address">Email address</label>
               <input type="email" class="form-control" id="js-stripe-email-address" placeholder="Enter email address" required="true">
             </div>
+            <div id="js-payment-custom-amount" class="form-group hide">
+              <label for="js-stripe-custom-amount">How much are you paying?</label>
+                <div class="input-group col-md-4">
+                  <span class="input-group-addon">$</span>
+                  <input type="number" class="form-control" id="js-stripe-custom-amount" placeholder="20.00" step="1.00" min="1.00" required="true" style="width: 100px;" value="20.00">
+                </div>
+            </div>
             <div id="js-payment-ticket-quantity" class="form-group">
               <label for="js-stripe-item-quantity">Quantity</label>
               <select id="js-stripe-item-quantity" class="form-control">
@@ -63,6 +70,7 @@
         <input id="js-stripe-item-type" type="hidden" />
         <input id="js-stripe-item-id" type="hidden" />
         <input id="js-stripe-total-cost" type="hidden" />
+        <input id="js-stripe-is-pay-what-you-can" type="hidden" value="false" />
         <input id="js-stripe-token" type="hidden" />
       </form>
       <div id="js-stripe-success-message" style="display: none;">

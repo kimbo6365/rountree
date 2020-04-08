@@ -58,7 +58,7 @@
 			$('body').on('click', '.js-checkout-btn', function(e) {
 				e.preventDefault();
 				const data = this.dataset;
-				const { itemCost, itemId, itemType, itemName, itemDate, isMulti = false } = this.dataset;
+				const { itemCost, itemId, itemType, itemName, itemDate, isMulti = false, isPayWhatYouCan } = this.dataset;
 				let totalCost = itemCost * 100;
 				let paymentPostId = itemId;
 				document.getElementById('js-payment-post-id').value = itemId;
@@ -70,6 +70,12 @@
 					totalCost = totalCost + getProcessingFee(totalCost);
 				} else if (itemType === 'class') {
 					document.getElementById('js-payment-ticket-sale').style.display = "none";
+					
+					if (isPayWhatYouCan) {
+						document.getElementById('js-payment-custom-amount').classList.remove("hide");
+						document.getElementById('js-stripe-is-pay-what-you-can').value = true;
+						document.getElementById('js-stripe-custom-amount').value = parseInt(itemCost).toFixed(2);			
+					}
 					if (!isMulti) {
 						document.getElementById('js-payment-item-summary').style.display = "none";
 					} else {
@@ -113,6 +119,14 @@
 				$('#js-stripe-payment-submit').text(`Pay ${formatCurrency(totalCost)}`);
 			});
 
+			$('body').on('change', '#js-stripe-custom-amount', function() {
+				if (this.value < 1.00) {
+					this.value = "1.00";
+				}
+				document.getElementById('js-stripe-total-cost').value = this.value * 100;
+				$('#js-stripe-payment-submit').text(`Pay ${formatCurrency(this.value * 100)}`);
+			});
+
 			$('body').on('submit', '#stripe-payment-form', async function(e) {
 				e.preventDefault();
 				const firstName = document.getElementById('js-stripe-first-name').value;
@@ -147,12 +161,14 @@
 				firstName: document.getElementById('js-stripe-first-name').value,
 				lastName: document.getElementById('js-stripe-last-name').value,
 				emailAddress: document.getElementById('js-stripe-email-address').value,
+				isPayWhatYouCan: document.getElementById('js-stripe-is-pay-what-you-can').value,
 				itemQuantity: document.getElementById('js-stripe-item-quantity').value,
 				itemName: document.getElementById('js-stripe-item-name').textContent,
 				itemKeys: document.getElementById('js-stripe-item-keys').value,
 				itemType: document.getElementById('js-stripe-item-type').value,
 				emailSignUp: document.getElementById('js-stripe-subscribe-newsletter').checked,
 				amount: Math.round(document.getElementById('js-stripe-total-cost').value),
+				itemCost: document.getElementById('js-payment-item-cost').value * 100,
 				itemId: document.getElementById('js-stripe-item-id').value,
 				paymentPostId: document.getElementById('js-payment-post-id').value
 			},

@@ -29,6 +29,7 @@
       $discount_amount = get_post_meta(get_the_ID(), 'class_discount_amount', true);
       $discount_label = get_post_meta(get_the_ID(), 'class_discount_label', true);
       $external_payment_link = get_post_meta(get_the_ID(), 'external_payment_link', true);
+      $is_pay_what_you_can = get_post_meta(get_the_ID(), 'is_pay_what_you_can', true);
 
       if ($discount_end_date) {
         // The date is stored in ms and the PHP date functions expect s, so multiply by 1000
@@ -82,12 +83,12 @@
                 <?php endforeach ?>
                 <?php wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly. ?>
                 <li>
-                  <button class="btn btn-primary btn-lg dropdown-button js-checkout-btn" data-item-name="<?php echo $class_name; ?>" data-item-cost="<?php echo $single_class_cost; ?>" data-item-type="class" data-item-id="<?php the_ID(); ?>" data-is-multi="true" type="button" data-item-date="">Sign up now!</button>
+                  <button class="btn btn-primary btn-lg dropdown-button js-checkout-btn" data-item-name="<?php echo $class_name; ?>" data-item-cost="<?php echo $single_class_cost; ?>" data-item-type="class" data-item-id="<?php the_ID(); ?>" data-is-multi="true" type="button" data-item-date="" data-is-pay-what-you-can="<?php echo (bool) $is_pay_what_you_can; ?>">Sign up now!</button>
                 </li>
               </ul>
             </div>
             <?php if (!$is_any_child_sold_out): ?>
-              <button type="button" class="btn btn-primary btn-lg js-checkout-btn" data-item-name="<?php the_title(); ?>" data-item-cost="<?php echo $cost; ?>" data-item-type="class" data-item-id="<?php the_ID(); ?>">
+              <button type="button" class="btn btn-primary btn-lg js-checkout-btn" data-item-name="<?php the_title(); ?>" data-item-cost="<?php echo $cost; ?>" data-item-type="class" data-item-id="<?php the_ID(); ?>" data-is-pay-what-you-can="<?php echo (bool) $is_pay_what_you_can; ?>">
                 Sign up for all classes!
               </button>
             <?php else: ?>
@@ -97,7 +98,7 @@
             <?php endif; ?>
           </div>
         <?php else: ?>
-          <a class="btn btn-primary btn-lg js-checkout-btn" data-item-name="<?php the_title(); ?>" data-item-cost="<?php echo $cost; ?>" data-item-type="class" data-item-id="<?php the_ID(); ?>">Sign Up Now!</a>
+          <a class="btn btn-primary btn-lg js-checkout-btn" data-item-name="<?php the_title(); ?>" data-item-cost="<?php echo $cost; ?>" data-item-type="class" data-item-id="<?php the_ID(); ?>" data-is-pay-what-you-can="<?php echo (bool) $is_pay_what_you_can; ?>">Sign Up Now!</a>
         <?php endif ?>      
       <?php endif; ?>
       
