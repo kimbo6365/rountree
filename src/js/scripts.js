@@ -100,6 +100,10 @@
 			$modal.modal('show');
 		});
 
+		$('#js-close-page-banner').on('click', function() {
+			$('#js-page-banner').addClass('hide');
+		});
+
 	// END ON LOAD
 	});
 } ( this, jQuery ));

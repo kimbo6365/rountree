@@ -1,0 +1,22 @@
+.page-banner {
+    position: fixed;
+    left: 30px;
+    right: 30px;
+    top: 15px;
+    opacity: .9;
+    z-index: 10000;
+    text-align: center;
+
+    button {
+        background: transparent;
+        border: none;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-style: normal;
+    }
+
+    a {
+        text-decoration: underline;
+    }
+}

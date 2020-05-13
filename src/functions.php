@@ -491,7 +491,7 @@ function rountree_button($atts, $content = 'Click here!', $tag)
 	return '<a class="btn btn-default" href="' . $a['url'] . '" title="' . $content . '">' . $content . '</a>';
 }
  
- function rountree_mailchimp_settings_api_init() {
+function rountree_mailchimp_settings_api_init() {
     add_settings_section(
        'rountree_mailchimp_setting_section',
        'Mailchimp settings',
@@ -517,6 +517,72 @@ function rountree_mailchimp_setting_section_callback() {
 function rountree_mailchimp_api_key_callback() {
     echo '<input name="rountree_mailchimp_api_key" id="rountree_mailchimp_api_key" type="text" class="code" value="'. get_option( 'rountree_mailchimp_api_key' ).'" />';
 }
+ 
+function rountree_page_banner_settings_init() {
+    add_settings_section(
+       'rountree_page_banner_setting_section',
+       'Page Banner settings',
+       'rountree_page_banner_setting_section_callback',
+       'general'
+   );
+    
+   add_settings_field(
+      'rountree_page_banner_bold_text',
+      'Page Banner Bold Text',
+      'rountree_page_banner_bold_text_callback',
+      'general',
+      'rountree_page_banner_setting_section'
+  );
+    
+    add_settings_field(
+       'rountree_page_banner_main_text',
+       'Page Banner Main Text',
+       'rountree_page_banner_main_text_callback',
+       'general',
+       'rountree_page_banner_setting_section'
+   );
+
+    
+   add_settings_field(
+        'rountree_page_banner_link_text',
+        'Page Banner Link Text',
+        'rountree_page_banner_link_text_callback',
+        'general',
+        'rountree_page_banner_setting_section'
+    );
+
+    add_settings_field(
+        'rountree_page_banner_link_url',
+        'Page Banner Link URL',
+        'rountree_page_banner_link_url_callback',
+        'general',
+        'rountree_page_banner_setting_section'
+    );
+    
+    register_setting( 'general', 'rountree_page_banner_bold_text' );
+    register_setting( 'general', 'rountree_page_banner_main_text' );
+    register_setting( 'general', 'rountree_page_banner_link_text' );
+    register_setting( 'general', 'rountree_page_banner_link_url' );
+} 
+
+add_action( 'admin_init', 'rountree_page_banner_settings_init' );
+
+function rountree_page_banner_setting_section_callback() {
+    echo '<p>Enter the information to show in a site-wide page banner here.</p>';
+}
+function rountree_page_banner_bold_text_callback() {
+    echo '<input name="rountree_page_banner_bold_text" id="rountree_page_banner_bold_text" type="text" class="code" value="'. get_option( 'rountree_page_banner_bold_text' ).'" />';
+}
+function rountree_page_banner_main_text_callback() {
+    echo '<input name="rountree_page_banner_main_text" id="rountree_page_banner_main_text" type="text" class="code" value="'. get_option( 'rountree_page_banner_main_text' ).'" />';
+}
+function rountree_page_banner_link_text_callback() {
+    echo '<input name="rountree_page_banner_link_text" id="rountree_page_banner_link_text" type="text" class="code" value="'. get_option( 'rountree_page_banner_link_text' ).'" />';
+}
+function rountree_page_banner_link_url_callback() {
+    echo '<input name="rountree_page_banner_link_url" id="rountree_page_banner_link_url" type="text" class="code" value="'. get_option( 'rountree_page_banner_link_url' ).'" />';
+}
+
 
 // Make sure the new Rountree plugin is active
 activate_plugin('rountree/rountree.php');

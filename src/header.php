@@ -45,6 +45,20 @@
 
 		<!-- wrapper -->
 		<div class="wrapper">
+			<?php if (get_option('rountree_page_banner_main_text')): ?>
+				<div id="js-page-banner" class="alert alert-warning page-banner">
+					<strong><?php echo get_option('rountree_page_banner_bold_text'); ?></strong>&nbsp;
+					<span>
+						<?php echo get_option('rountree_page_banner_main_text'); ?>&nbsp;&nbsp;
+						<a href="<?php echo get_option('rountree_page_banner_link_url'); ?>">
+							<?php echo get_option('rountree_page_banner_link_text'); ?>
+						</a>
+					</span>
+					<button type="button" id="js-close-page-banner">
+						<i>&times;</i>
+					</button>
+				</div>
+			<?php endif; ?>
 
 			<!-- header -->
 			<header class="header clear" role="banner">

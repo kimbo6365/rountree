@@ -6559,6 +6559,28 @@ footer {
 .show-detailed-directions-link {
   margin-right: 1em; }
 
+.class-type {
+  position: relative;
+  float: left;
+  width: 50%;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+  display: flex;
+  flex-direction: column; }
+  @media (min-width: 992px) {
+    .class-type {
+      float: left;
+      width: 25%; } }
+  .class-type img {
+    border-radius: 50%;
+    max-width: 75%;
+    align-self: center; }
+
 .nf-form-fields-required {
   font-size: 0;
   margin-bottom: 0; }
@@ -6569,6 +6591,24 @@ footer {
 
 .nf-element[type="checkbox"] {
   margin-top: 0.5em; }
+
+.page-banner {
+  position: fixed;
+  left: 30px;
+  right: 30px;
+  top: 15px;
+  opacity: .9;
+  z-index: 10000;
+  text-align: center; }
+  .page-banner button {
+    background: transparent;
+    border: none;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-style: normal; }
+  .page-banner a {
+    text-decoration: underline; }
 
 h1, h2, h3, h4, h5, h6,
 .nav,
@@ -6643,7 +6683,7 @@ section.container {
     font-size: 72px;
     margin: 0; }
   .title-text h2 {
-    font-size: 36px;
+    font-size: 30px;
     margin: 0; }
 
 .rountree .stripe-button-el {
