@@ -220,6 +220,7 @@
 		$('#js-stripe-success-message').hide();
 		$('#js-stripe-error-message').hide();
 		$('#stripe-payment-form')[0].reset();
+		document.getElementById('js-payment-custom-amount').classList.add("hide");
 		window.card.clear();
 	}
 
