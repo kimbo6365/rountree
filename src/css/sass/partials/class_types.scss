@@ -1,8 +1,23 @@
 .class-type {
-    @include make-xs-column(6);
-    @include make-md-column(4);
+    @include make-xs-column(12);
+    @include make-sm-column(6);
     display: flex;
     flex-direction: column;
+
+    @media screen and (min-width: $screen-xs + 1) {
+        &:nth-child(odd) {
+            padding-right: 30px;
+        }
+    
+        &:nth-child(even) {
+            padding-left: 30px;
+        }
+    
+        &.all-classes {
+            float: none;
+            margin: 0 auto;
+        }
+    }
 
     a {
         text-align: center;
@@ -20,13 +35,15 @@
         }
     }
 
-    p {
+    > div {
         height: 150px;
         text-overflow: ellipsis;
+        text-align: center;
+        width: 80%;
+        margin: 0 auto 10px;
     }
 
     h1 {
-        color: $link-color;
         text-align: center;
     }
 }

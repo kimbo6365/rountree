@@ -39,17 +39,22 @@
                         ?>
                         <a href="<?php echo $url; ?>"><img src="<?php echo $image_url[0]; ?>" alt=""/></a>
                         <h1><a href="<?php echo $url; ?>"><?php echo $type->name; ?></a></h1>
-                        <p><?php echo $type->description; ?></p>
+                        <div>
+							<p><?php echo $type->description; ?></p>
+							<a class="btn btn-default" href="<?php echo $url; ?>">View <?php echo $type->name; ?> classes</a>
+						</div>
                     </article>
 				<?php endif; ?>
                 <?php endforeach; ?>
-                <article class="class-type" <?php post_class(); ?>>
+                <article class="class-type all-classes" <?php post_class(); ?>>
                     <?php 
                         $url = get_site_url() . "/all-classes";
                     ?>
                     <a href="<?php echo $url; ?>"><img src="<?php the_post_thumbnail_url('medium')?>" alt=""/></a>
                     <h1><a href="<?php echo $url; ?>">All classes</a></h1>
-                    <p>View a list of all classes</p>
+                    <div>
+						<a class="btn btn-default" href="<?php echo $url; ?>">View  all classes</a>
+					</div>
                 </article>
 			<?php endif; ?>
 		</div>

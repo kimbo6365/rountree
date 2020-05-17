@@ -170,7 +170,7 @@ function html5blank_styles()
         wp_enqueue_style('html5blank');
     } else {
         // Custom CSS
-        wp_register_style('html5blankcssmin', get_template_directory_uri() . '/style.css', array(), '1.0');
+        wp_register_style('html5blankcssmin', get_template_directory_uri() . '/style.css', array(), '1.0.2');
         // Register CSS
         wp_enqueue_style('html5blankcssmin');
     }
