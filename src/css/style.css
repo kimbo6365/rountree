@@ -6566,16 +6566,12 @@ footer {
   min-height: 1px;
   padding-left: 15px;
   padding-right: 15px;
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
   display: flex;
   flex-direction: column; }
-  @media (min-width: 992px) {
-    .class-type {
-      float: left;
-      width: 33.33333%; } }
+  .class-type:nth-child(odd) {
+    padding-right: 30px; }
+  .class-type:nth-child(even) {
+    padding-left: 30px; }
   .class-type a {
     text-align: center; }
   .class-type img {
@@ -6588,10 +6584,10 @@ footer {
       filter: saturate(1); }
   .class-type p {
     height: 150px;
-    text-overflow: ellipsis; }
-  .class-type h1 {
-    color: #337ab7;
-    text-align: center; }
+    text-overflow: ellipsis;
+    text-align: center;
+    width: 80%;
+    margin: 0 auto 10px; }
 
 .nf-form-fields-required {
   font-size: 0;
