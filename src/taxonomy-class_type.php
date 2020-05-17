@@ -4,12 +4,12 @@
 	$class_page_query = new WP_Query( 
 		array( 
 			'p' => $CLASSES_PAGE_ID, 
-			'post_type' => 'any'
+            'post_type' => 'any',
 		) 
 	);
 	if ($class_page_query->have_posts()): while ($class_page_query->have_posts()) : $class_page_query->the_post();
 ?>
-<?php get_header(); ?>
+<?php /* Template Name: Classes */ get_header(); ?>
 	<main role="main" aria-label="Content">
 		<section class="container">
 			<div class="row">
@@ -41,7 +41,14 @@
 					$wp_query = new WP_Query( 
 						array(
 							'post_type' => 'class', 
-							'posts_per_page' => -1
+                            'posts_per_page' => -1,
+                            'tax_query' => array(
+                                array(
+                                    'taxonomy' => 'class_type',
+                                    'field'    => 'slug',
+                                    'terms'    => $class_type,
+                                )
+                            ),
 						)
 					);
 					if (have_posts()): while (have_posts()) : the_post();

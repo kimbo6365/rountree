@@ -6580,6 +6580,8 @@ footer {
     border-radius: 50%;
     max-width: 75%;
     align-self: center; }
+  .class-type p {
+    min-height: 3.5em; }
 
 .nf-form-fields-required {
   font-size: 0;
