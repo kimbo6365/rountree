@@ -2,6 +2,8 @@
 /* global $: true */
 "use strict";
 
+var uglify = require("gulp-uglify-es").default;
+
 var gulp = require( "gulp" ),
 	/** @type {Object} Loader of Gulp plugins from `package.json` */
 	$ = require( "gulp-load-plugins" )(),
@@ -16,7 +18,10 @@ var gulp = require( "gulp" ),
 		/** Bootstrap */
 		"src/js/lib/bootstrap.js",
 		/** Page scripts */
-		"src/js/scripts.js"
+		"src/js/scripts.js",
+		/** Custom scripts */
+		"src/js/lib/bootstrap.js",
+		"src/js/lib/rountree_stripe_payment.js"
 	],
 	/** @type {Object of Array} CSS source files to concatenate and minify */
 	cssminSrc = {
@@ -30,7 +35,7 @@ var gulp = require( "gulp" ),
 			/** The banner of `style.css` */
 			"src/css/banner.css",
 			/** Normalize */
-			"src/bower_components/normalize.css/normalize.css",
+			"dist/bower_components/normalize.css/normalize.css",
 			/** Theme style */
 			"src/css/style.css"
 		]
@@ -65,7 +70,6 @@ gulp.task( "copy", function() {
 			"src/modules/*.php",
 			"src/img/**/*.{jpg,png,svg,gif,webp,ico}",
 			"src/fonts/*.{woff,woff2,ttf,otf,eot,svg}",
-			"src/languages/*.{po,mo,pot}"
 		], {
 			base: "src"
 		})
@@ -126,7 +130,7 @@ gulp.task( "template", function() {
 gulp.task( "uglify", function() {
 	return gulp.src( uglifySrc )
 		.pipe( $.concat( "scripts.min.js" ) )
-		.pipe( $.uglify() )
+		.pipe( uglify() )
 		.pipe( gulp.dest( "dist/js" ) );
 });
 

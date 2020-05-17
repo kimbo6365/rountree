@@ -6575,13 +6575,23 @@ footer {
   @media (min-width: 992px) {
     .class-type {
       float: left;
-      width: 25%; } }
+      width: 33.33333%; } }
+  .class-type a {
+    text-align: center; }
   .class-type img {
     border-radius: 50%;
-    max-width: 75%;
-    align-self: center; }
+    max-width: 50%;
+    align-self: center;
+    filter: saturate(0);
+    transition: all 200ms ease-in-out; }
+    .class-type img:hover {
+      filter: saturate(1); }
   .class-type p {
-    min-height: 3.5em; }
+    height: 150px;
+    text-overflow: ellipsis; }
+  .class-type h1 {
+    color: #337ab7;
+    text-align: center; }
 
 .nf-form-fields-required {
   font-size: 0;

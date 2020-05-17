@@ -146,10 +146,14 @@
 			$('body').on('click', '.js-multi-class-item-toggle', (e) => {
 				e.stopPropagation();
 			});
+
+			$('#js-stripe-payment-form').on('hidden.bs.modal', function() {
+				resetForm();
+			});
 			/* jshint ignore:end */
 		});
 	// End on load
-	});
+	});	
 	function submitPaymentForm(form) {
 		$('#js-stripe-payment-form-spinner').show();
 		return $.ajax({
@@ -211,9 +215,6 @@
 			$('#js-stripe-payment-form-spinner').hide();
 		});
 	}
-	$('#js-stripe-payment-form').on('hidden.bs.modal', function() {
-		resetForm();
-	});
 
 	const resetForm = () => {
 		$('#stripe-payment-form').show();
