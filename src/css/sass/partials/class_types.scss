@@ -3,6 +3,14 @@
     @include make-sm-column(6);
     display: flex;
     flex-direction: column;
+    
+    &:nth-child(odd) {
+        padding-right: 30px;
+    }
+
+    &:nth-child(even) {
+        padding-left: 30px;
+    }
 
     @media screen and (min-width: $screen-xs + 1) {
         &:nth-child(odd) {
@@ -45,5 +53,7 @@
 
     h1 {
         text-align: center;
+        width: 80%;
+        margin: 0 auto 10px;
     }
 }

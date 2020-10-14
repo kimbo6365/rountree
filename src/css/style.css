@@ -6566,10 +6566,6 @@ footer {
   min-height: 1px;
   padding-left: 15px;
   padding-right: 15px;
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
   display: flex;
   flex-direction: column; }
   @media (min-width: 768px) {
