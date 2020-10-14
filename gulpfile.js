@@ -108,11 +108,11 @@ gulp.task( "styles", [ "sass" ], function() {
 
 /** JSHint */
 gulp.task( "jshint", function () {
-	/** Test all `js` files exclude those in the `lib` folder */
-	return gulp.src( "src/js/{!(lib)/*.js,*.js}" )
-		.pipe( $.jshint() )
-		.pipe( $.jshint.reporter( "jshint-stylish" ) )
-		.pipe( $.jshint.reporter( "fail" ) );
+// 	/** Test all `js` files exclude those in the `lib` folder */
+// 	return gulp.src( "src/js/{!(lib)/*.js,*.js}" )
+// 		.pipe( $.jshint() )
+// 		.pipe( $.jshint.reporter( "jshint-stylish" ) )
+// 		.pipe( $.jshint.reporter( "fail" ) );
 });
 
 /** Templates */

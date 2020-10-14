@@ -132,7 +132,7 @@ function html5blank_header_scripts()
         // If production
         } else {
             // Scripts minify
-            wp_register_script('html5blankscripts-min', get_template_directory_uri() . '/js/scripts.min.js', array(), '1.0.0');
+            wp_register_script('html5blankscripts-min', get_template_directory_uri() . '/js/scripts.min.js', array(), '1.0.2');
             // Enqueue Scripts
             wp_enqueue_script('html5blankscripts-min');
             wp_localize_script('html5blankscripts-min', 'stripePaymentSettings', array(
@@ -170,7 +170,7 @@ function html5blank_styles()
         wp_enqueue_style('html5blank');
     } else {
         // Custom CSS
-        wp_register_style('html5blankcssmin', get_template_directory_uri() . '/style.css', array(), '1.0.2');
+        wp_register_style('html5blankcssmin', get_template_directory_uri() . '/style.css', array(), '1.0.3');
         // Register CSS
         wp_enqueue_style('html5blankcssmin');
     }

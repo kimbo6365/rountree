@@ -14,7 +14,9 @@
             </article>
             <!-- /article -->
             <div class="entry-spacer compact"></div>
-            <?php echo do_shortcode('[ninja_form id=5]'); ?>
+            <div class="js-landing-page-form">
+                <?php echo do_shortcode('[ninja_form id=5]'); ?>
+            </div>
         </div>
 
 	<?php endwhile; ?>

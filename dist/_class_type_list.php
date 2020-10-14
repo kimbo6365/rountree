@@ -39,10 +39,7 @@
                         ?>
                         <a href="<?php echo $url; ?>"><img src="<?php echo $image_url[0]; ?>" alt=""/></a>
                         <h1><a href="<?php echo $url; ?>"><?php echo $type->name; ?></a></h1>
-                        <div>
-							<p><?php echo $type->description; ?></p>
-							<a class="btn btn-default" href="<?php echo $url; ?>">View <?php echo $type->name; ?> classes</a>
-						</div>
+                        <p><a href="<?php echo $url; ?>"><?php echo $type->description; ?> &#8594;</a></p>
                     </article>
 				<?php endif; ?>
                 <?php endforeach; ?>
@@ -52,9 +49,7 @@
                     ?>
                     <a href="<?php echo $url; ?>"><img src="<?php the_post_thumbnail_url('medium')?>" alt=""/></a>
                     <h1><a href="<?php echo $url; ?>">All classes</a></h1>
-                    <div>
-						<a class="btn btn-default" href="<?php echo $url; ?>">View  all classes</a>
-					</div>
+                    <p><a href="<?php echo $url; ?>">View a list of all classes &#8594;</a></p>
                 </article>
 			<?php endif; ?>
 		</div>

@@ -76,7 +76,7 @@
               echo "<p>\$$cost_at_door at door</p>";
             }
           } else if ($should_show_free_rsvp) {
-              echo '<span>Tickets are free!</span><br /><a class="btn btn-primary js-free-rsvp-btn" data-item-name="'. get_the_title() .'" data-mailchimp-tag-name="' . $mailchimp_tag_name . '">RSVP</a>';
+              echo '<span>Tickets are free!</span><br /><a class="btn btn-primary js-show-rsvp-btn" data-item-name="'. get_the_title() .'" data-mailchimp-tag-name="' . $mailchimp_tag_name . '" data-item-date="'. $date .'">RSVP</a>';
           } else if (!empty($online_cost)) {
               echo '<a class="btn btn-primary js-checkout-btn" data-item-name="'. get_the_title() .'" data-item-cost="'. $online_cost .'" data-item-type="show" data-item-date="'. $showtime .'" data-item-id="'. $single_show_id .'">Buy tickets!</a>';
           } else if (!empty($ticket_link)) {

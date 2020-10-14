@@ -5,8 +5,8 @@
 		$.getScript('https://js.stripe.com/v3/')
 		.done(function() {
 			/* jshint ignore:start */
-			var stripe = Stripe(stripePaymentSettings.liveApiKey);
-			// var stripe = Stripe(stripePaymentSettings.testApiKey);
+			// var stripe = Stripe(stripePaymentSettings.liveApiKey);
+			var stripe = Stripe(stripePaymentSettings.testApiKey);
 			var elements = stripe.elements({
 				fonts: [
 					{
@@ -174,7 +174,8 @@
 				amount: Math.round(document.getElementById('js-stripe-total-cost').value),
 				itemCost: document.getElementById('js-payment-item-cost').value * 100,
 				itemId: document.getElementById('js-stripe-item-id').value,
-				paymentPostId: document.getElementById('js-payment-post-id').value
+				paymentPostId: document.getElementById('js-payment-post-id').value,
+				itemDate: document.getElementById('js-payment-item-date').value,
 			},
 			dataType: 'json'
 		})

@@ -6594,7 +6594,7 @@ footer {
     transition: all 200ms ease-in-out; }
     .class-type img:hover {
       filter: saturate(1); }
-  .class-type > div {
+  .class-type > p {
     height: 150px;
     text-overflow: ellipsis;
     text-align: center;

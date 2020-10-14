@@ -65,8 +65,8 @@
 		$('.js-request-class').on('click', function() {
 			const $modal = $('.js-request-class-modal');
 			$modal.find('.modal-title').html(`Request ${this.dataset.requestedClass} Class`);
-			$modal.find('.modal-body').find('input[type="hidden"]').val(this.dataset.requestedClass);
 			$modal.modal('show');
+			$modal.find('.modal-body').find('input[type="hidden"]').val(this.dataset.requestedClass);
 		});
 
 		$('.js-join-waitlist').on('click', function() {
@@ -76,8 +76,8 @@
 			$modal.modal('show');
 		});
 
-		$('.js-free-rsvp-btn').on('click', function() {
-			const $modal = $('.js-free-rsvp');
+		$('.js-show-rsvp-btn').on('click', function() {
+			const $modal = $('.js-show-rsvp-modal');
 			$modal.find('.modal-title').html(`RSVP for ${this.dataset.itemName}`);
 			$modal.find('.modal-body').find('input[type="hidden"]').val(this.dataset.mailchimpTagName);
 			$modal.modal('show');
@@ -103,6 +103,45 @@
 		$('#js-close-page-banner').on('click', function() {
 			$('#js-page-banner').addClass('hide');
 		});
+
+
+	const setRequestedClassField = Marionette.Object.extend( {
+		initialize: function() {
+			this.listenTo(Backbone.Radio.channel('form-3'), 'before:submit', (model) => {
+				model.getFieldByKey('class_requested_1525965758012').set('value', $('.js-request-class-modal').find('input[type="hidden"]').val());
+			});
+		}
+	});
+	new setRequestedClassField();
+
+	const setWaitlistClassField = Marionette.Object.extend( {
+		initialize: function() {
+			this.listenTo(Backbone.Radio.channel('form-4'), 'before:submit', (model) => {
+				model.getFieldByKey('hidden_1546799796262').set('value', $('.js-join-waitlist').find('input[type="hidden"]').val());
+			});
+		}
+	});
+	new setWaitlistClassField();
+
+	const setMailchimpTagNameForLandingPage = Marionette.Object.extend( {
+		initialize: function() {
+			// THIS DEPENDS ON THE MAILCHIMP TAG NAME BEING THE FIRST HIDDEN FIELD. IT'S FRAGILE AND DUMB, BUT IT'S ALL WE CAN DO.
+			this.listenTo(Backbone.Radio.channel('form-5'), 'before:submit', (model) => {
+				model.getFieldByKey('hidden_1564971965940').set('value', $('.js-landing-page-form').find('input[type="hidden"]').val());
+			});
+		}
+	});
+	new setMailchimpTagNameForLandingPage();
+
+
+	const setMailchimpTagNameForRSVP = Marionette.Object.extend( {
+		initialize: function() {
+			this.listenTo(Backbone.Radio.channel('form-6'), 'before:submit', (model) => {
+				model.getFieldByKey('hidden_1564971965940').set('value', $('.js-show-rsvp-modal').find('input[type="hidden"]').val());
+			});
+		}
+	});
+	new setMailchimpTagNameForRSVP();
 
 	// END ON LOAD
 	});
