@@ -72,6 +72,8 @@
         <input id="js-stripe-total-cost" type="hidden" />
         <input id="js-stripe-is-pay-what-you-can" type="hidden" value="false" />
         <input id="js-stripe-token" type="hidden" />
+        <input id="js-mailchimp-tag-name" type="hidden" />
+        <input id="js-stripe-item-date" type="hidden" />
       </form>
       <div id="js-stripe-success-message" style="display: none;">
         <div class="modal-body">

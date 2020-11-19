@@ -58,15 +58,21 @@
 			$('body').on('click', '.js-checkout-btn', function(e) {
 				e.preventDefault();
 				const data = this.dataset;
-				const { itemCost, itemId, itemType, itemName, itemDate, isMulti = false, isPayWhatYouCan } = this.dataset;
+				const { itemCost, itemId, itemType, itemName, itemDate, isMulti = false, isPayWhatYouCan, mailchimpTagName, itemPlainDate } = this.dataset;
 				let totalCost = itemCost * 100;
 				let paymentPostId = itemId;
 				document.getElementById('js-payment-post-id').value = itemId;
+				if (mailchimpTagName) {
+					document.getElementById('js-mailchimp-tag-name').value = mailchimpTagName;
+				} 
 				if (itemType === 'show') {
 					if (isPayWhatYouCan) {
 						document.getElementById('js-payment-custom-amount').classList.remove("hide");
 						document.getElementById('js-stripe-is-pay-what-you-can').value = true;
 						document.getElementById('js-stripe-custom-amount').value = parseInt(itemCost).toFixed(2);			
+					}
+					if (itemPlainDate) {
+						document.getElementById('js-stripe-item-date').value = itemPlainDate;
 					}
 					document.getElementById('js-payment-class-sale').style.display = "none";
 					document.getElementById('js-payment-modal-header').textContent = 'Get your tickets!';
@@ -189,6 +195,8 @@
 				itemId: document.getElementById('js-stripe-item-id').value,
 				paymentPostId: document.getElementById('js-payment-post-id').value,
 				itemDate: document.getElementById('js-payment-item-date').value,
+				mailchimpTagName: document.getElementById('js-mailchimp-tag-name').value,
+				itemPlainDate: document.getElementById('js-stripe-item-date').value,
 			},
 			dataType: 'json'
 		})
