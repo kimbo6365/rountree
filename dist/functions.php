@@ -132,7 +132,7 @@ function html5blank_header_scripts()
         // If production
         } else {
             // Scripts minify
-            wp_register_script('html5blankscripts-min', get_template_directory_uri() . '/js/scripts.min.js', array(), '1.0.2');
+            wp_register_script('html5blankscripts-min', get_template_directory_uri() . '/js/scripts.min.js', array(), '1.0.4');
             // Enqueue Scripts
             wp_enqueue_script('html5blankscripts-min');
             wp_localize_script('html5blankscripts-min', 'stripePaymentSettings', array(

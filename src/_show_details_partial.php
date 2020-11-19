@@ -48,18 +48,21 @@
           $single_show_id = $post->ID;
           $should_show_free_rsvp = get_field('should_show_free_rsvp');
           $mailchimp_tag_name = get_post_meta($single_show_id, 'mailchimp_tag_name', true);
+          $is_pay_what_you_can = get_post_meta($single_show_id, 'is_pay_what_you_can', true);
 
           $showtime = date('D, m/d', strtotime($date)) . ' at ' . $time;
           wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly. 
 
           echo '<tr>';
           echo '<td class="show-date-time">' . $showtime . '</td>';
-          if (!empty($location_name) && !empty($location_address)) {
+          if (!empty($location_name)) {
             echo "<td class=\"show-location\">$location_name";
             if ($detailed_directions_page && !empty(get_the_title($detailed_directions_page))) {
               echo "<a class=\"btn btn-sm btn-default show-detailed-directions-link js-trigger-detailed-directions-modal\" data-detailed-directions-post-title=\"". get_the_title($detailed_directions_page). "\" data-detailed-directions-post-content=\"". esc_attr(get_post_field('post_content', $detailed_directions_page)) . "\">How to get there</a>";
             }
-            echo '<br />' . buildGoogleMapsLink($location_address) . '</td>';
+            if (!empty($location_address)) {
+              echo '<br />' . buildGoogleMapsLink($location_address) . '</td>';
+            }
           }
           echo "<td class=\"show-ticket-info\">";
 
@@ -78,7 +81,7 @@
           } else if ($should_show_free_rsvp) {
               echo '<span>Tickets are free!</span><br /><a class="btn btn-primary js-show-rsvp-btn" data-item-name="'. get_the_title() .'" data-mailchimp-tag-name="' . $mailchimp_tag_name . '" data-item-date="'. $date .'">RSVP</a>';
           } else if (!empty($online_cost)) {
-              echo '<a class="btn btn-primary js-checkout-btn" data-item-name="'. get_the_title() .'" data-item-cost="'. $online_cost .'" data-item-type="show" data-item-date="'. $showtime .'" data-item-id="'. $single_show_id .'">Buy tickets!</a>';
+              echo '<a class="btn btn-primary js-checkout-btn" data-item-name="'. get_the_title() .'" data-item-cost="'. $online_cost .'" data-item-type="show" data-item-date="'. $showtime .'" data-item-id="'. $single_show_id .'" data-is-pay-what-you-can="' . boolval($is_pay_what_you_can) . '">Buy tickets!</a>';
           } else if (!empty($ticket_link)) {
               echo '<a class="btn btn-primary" target="_blank" href="' . $ticket_link . '">Buy tickets!</a>';
           }

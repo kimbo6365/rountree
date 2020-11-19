@@ -6566,12 +6566,20 @@ footer {
   min-height: 1px;
   padding-left: 15px;
   padding-right: 15px;
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
   display: flex;
   flex-direction: column; }
   @media (min-width: 768px) {
     .class-type {
       float: left;
       width: 50%; } }
+  .class-type:nth-child(odd) {
+    padding-right: 30px; }
+  .class-type:nth-child(even) {
+    padding-left: 30px; }
   @media screen and (min-width: 481px) {
     .class-type:nth-child(odd) {
       padding-right: 30px; }
@@ -6597,7 +6605,9 @@ footer {
     width: 80%;
     margin: 0 auto 10px; }
   .class-type h1 {
-    text-align: center; }
+    text-align: center;
+    width: 80%;
+    margin: 0 auto 10px; }
 
 .nf-form-fields-required {
   font-size: 0;

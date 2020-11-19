@@ -5,8 +5,8 @@
 		$.getScript('https://js.stripe.com/v3/')
 		.done(function() {
 			/* jshint ignore:start */
-			// var stripe = Stripe(stripePaymentSettings.liveApiKey);
-			var stripe = Stripe(stripePaymentSettings.testApiKey);
+			var stripe = Stripe(stripePaymentSettings.liveApiKey);
+			// var stripe = Stripe(stripePaymentSettings.testApiKey);
 			var elements = stripe.elements({
 				fonts: [
 					{
@@ -63,6 +63,11 @@
 				let paymentPostId = itemId;
 				document.getElementById('js-payment-post-id').value = itemId;
 				if (itemType === 'show') {
+					if (isPayWhatYouCan) {
+						document.getElementById('js-payment-custom-amount').classList.remove("hide");
+						document.getElementById('js-stripe-is-pay-what-you-can').value = true;
+						document.getElementById('js-stripe-custom-amount').value = parseInt(itemCost).toFixed(2);			
+					}
 					document.getElementById('js-payment-class-sale').style.display = "none";
 					document.getElementById('js-payment-modal-header').textContent = 'Get your tickets!';
 					document.getElementById('js-payment-item-date').textContent = itemDate;
@@ -123,8 +128,16 @@
 				if (this.value < 1.00) {
 					this.value = "1.00";
 				}
-				document.getElementById('js-stripe-total-cost').value = this.value * 100;
-				$('#js-stripe-payment-submit').text(`Pay ${formatCurrency(this.value * 100)}`);
+				
+				let totalCost = this.value * 100;
+				if (document.getElementById('js-stripe-item-type').value === 'show') {
+					document.getElementById('js-payment-processing-fee-total').textContent = formatCurrency(getProcessingFee(totalCost));
+					const quantity = Number.parseInt(document.getElementById('js-stripe-item-quantity').value, 10);
+					totalCost = totalCost * quantity + getProcessingFee(totalCost);
+				}
+				document.getElementById('js-stripe-total-cost').value = totalCost;
+				document.getElementById('js-payment-item-cost').value = this.value;
+				$('#js-stripe-payment-submit').text(`Pay ${formatCurrency(totalCost)}`);
 			});
 
 			$('body').on('submit', '#stripe-payment-form', async function(e) {
